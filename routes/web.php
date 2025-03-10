@@ -22,3 +22,11 @@ Route::get('/data-bencana', function () {
 Route::get('/tentang', function () {
     return view('tentang.index');
 })->name('tentang');
+
+Auth::routes();
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+Auth::routes();
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
