@@ -4,8 +4,8 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <head>
-            <title>🚨 BPBD Deli Serdang</title>
-            <link rel="icon" type="image/png" href="{{ asset('bpbd.png') }}">
+            <title> BPBD Deli Serdang</title>
+            <link rel="icon" type="image/png" href="{{ asset('images/logo_bpbd.png') }}">
         </head>
 
         <!-- Fonts -->
@@ -196,7 +196,7 @@
                     <div class="flex">
                         <div class="flex-shrink-0 flex items-center">
                             <a href="{{ url('/') }}" class="flex items-center">
-                                <img class="h-8 w-auto" src="{{ asset('images/logo-bpbd.png') }}" alt="BPBD Logo">
+                                <img class="h-8 w-auto" src="{{ asset('images/logo_bpbd.png') }}" alt="BPBD Logo">
                                 <span class="ml-3 font-semibold text-gray-900">BPBD Deli Serdang</span>
                             </a>
                         </div>
@@ -495,7 +495,7 @@
                     <!-- News 1 -->
                     <div class="bg-white rounded-xl shadow-lg overflow-hidden card-hover" data-aos="fade-up" data-aos-delay="100">
                         <div class="relative">
-                            <img src="/images/news-banjir.jpg" alt="Banjir" class="w-full h-48 object-cover">
+                            <img src="/images/banjir.jpg" alt="Banjir" class="w-full h-48 object-cover">
                             <div class="absolute top-0 right-0 mt-4 mr-4">
                                 <span class="bg-red-600 text-white px-3 py-1 rounded-full text-sm">Breaking News</span>
                             </div>
@@ -520,7 +520,7 @@
                     <!-- News 2 -->
                     <div class="bg-white rounded-xl shadow-lg overflow-hidden card-hover" data-aos="fade-up" data-aos-delay="200">
                         <div class="relative">
-                            <img src="/images/news-gempa.jpg" alt="Gempa" class="w-full h-48 object-cover">
+                            <img src="/images/gempa.jpeg" alt="Gempa" class="w-full h-48 object-cover">
                             <div class="absolute top-0 right-0 mt-4 mr-4">
                                 <span class="bg-yellow-500 text-white px-3 py-1 rounded-full text-sm">Update</span>
                             </div>
@@ -545,7 +545,7 @@
                     <!-- News 3 -->
                     <div class="bg-white rounded-xl shadow-lg overflow-hidden card-hover" data-aos="fade-up" data-aos-delay="300">
                         <div class="relative">
-                            <img src="/images/news-training.jpg" alt="Training" class="w-full h-48 object-cover">
+                            <img src="/images/training.jpg" alt="Training" class="w-full h-48 object-cover">
                             <div class="absolute top-0 right-0 mt-4 mr-4">
                                 <span class="bg-green-500 text-white px-3 py-1 rounded-full text-sm">Event</span>
                             </div>
@@ -556,7 +556,7 @@
                                 <span class="mx-2 text-gray-300">•</span>
                                 <span class="text-gray-500 text-sm">1 hari yang lalu</span>
                             </div>
-                            <h3 class="text-xl font-semibold mt-2 mb-3">Pelatihan Tanggap Bencana 2024</h3>
+                            <h3 class="text-xl font-semibold mt-2 mb-3">Pelatihan Tanggap Bencana 2025</h3>
                             <p class="text-gray-600 mb-4">BPBD mengadakan pelatihan tanggap bencana untuk relawan...</p>
                             <a href="#" class="text-red-600 font-medium hover:text-red-700 flex items-center">
                                 Baca selengkapnya 
