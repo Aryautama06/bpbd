@@ -57,6 +57,11 @@ Route::middleware(['auth'])->group(function () {
     // Manajemen Bencana
     Route::resource('bencana', BencanaController::class);
 
+    // Resource Management Routes
+    Route::resource('personel', PersonelController::class);
+    Route::resource('peralatan', PeralatanController::class);
+    Route::resource('dana', DanaController::class);
+
     // SPK Routes
     Route::resource('kriteria', KriteriaController::class);
     Route::resource('alternatif', AlternatifController::class);
