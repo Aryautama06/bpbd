@@ -10,3 +10,17 @@
     --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
         'Segoe UI Symbol', 'Noto Color Emoji';
 }
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+    :root {
+        --color-bpbd-primary: #E63946;
+        --color-bpbd-secondary: #1D3557;
+        --color-bpbd-accent: #457B9D;
+        --color-bpbd-light: #F1FAEE;
+        --color-bpbd-dark: #1D3557;
+    }
+}

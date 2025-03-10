@@ -223,19 +223,10 @@
                         
                         <!-- Login/Dashboard Button -->
                         <div class="flex items-center ml-4">
-                            @if (Route::has('login'))
-                                @auth
-                                    <a href="{{ url('/dashboard') }}" 
-                                       class="btn-primary px-6 py-2 rounded-lg font-medium hover:scale-105 transform transition-all duration-200">
-                                        Dashboard
-                                    </a>
-                                @else
-                                    <a href="{{ route('login') }}" 
-                                       class="btn-primary px-6 py-2 rounded-lg font-medium hover:scale-105 transform transition-all duration-200">
-                                        Login
-                                    </a>
-                                @endauth
-                            @endif
+                            <a href="{{ route('login') }}" 
+                               class="btn-primary px-6 py-2 rounded-lg font-medium hover:scale-105 transform transition-all duration-200">
+                                Login
+                            </a>
                         </div>
                     </div>
 
