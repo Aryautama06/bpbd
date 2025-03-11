@@ -16,10 +16,10 @@ return new class extends Migration
             $table->string('kecamatan');
             $table->text('deskripsi');
             $table->text('dampak');
-            $table->integer('korban_jiwa');
-            $table->string('kerusakan');
-            $table->decimal('kerugian', 15, 2);
+            $table->string('dampak_korban')->nullable();
+            $table->string('dampak_kerusakan')->nullable();
             $table->enum('status', ['Proses', 'Selesai']);
+            $table->decimal('kerugian', 15, 2);
             $table->timestamps();
         });
     }

@@ -25,33 +25,24 @@ class BencanaController extends Controller
 
     public function store(Request $request)
     {
-        try {
-            DB::beginTransaction();
+        $validated = $request->validate([
+            'tanggal' => 'required|date',
+            'jenis_bencana' => 'required|string',
+            'lokasi' => 'required|string',
+            'kecamatan' => 'required|string',
+            'deskripsi' => 'required|string',
+            'dampak' => 'nullable|string',
+            'dampak_korban' => 'nullable|string',
+            'dampak_kerusakan' => 'nullable|string',
+            'status' => 'required|in:Proses,Selesai',
+            'kerugian' => 'required|numeric'
+        ]);
 
-            $validated = $request->validate([
-                'tanggal' => 'required|date',
-                'jenis_bencana' => 'required|string|max:255',
-                'lokasi' => 'required|string|max:255',
-                'kecamatan' => 'required|string|max:255',
-                'deskripsi' => 'required|string',
-                'dampak' => 'required|string',
-                'korban_jiwa' => 'required|integer|min:0',
-                'kerusakan' => 'required|string|max:255',
-                'kerugian' => 'required|numeric|min:0',
-                'status' => 'required|in:Proses,Selesai',
-            ]);
+        $bencana = Bencana::create($validated);
 
-            Bencana::create($validated);
-            
-            DB::commit();
-            return redirect()->route('bencana.index')
-                           ->with('success', 'Data bencana berhasil ditambahkan');
-
-        } catch (\Exception $e) {
-            DB::rollback();
-            return back()->with('error', 'Terjadi kesalahan saat menyimpan data')
-                        ->withInput();
-        }
+        return redirect()
+            ->route('bencana.index')
+            ->with('success', 'Data bencana berhasil ditambahkan!');
     }
 
     public function show(Bencana $bencana)
@@ -65,42 +56,29 @@ class BencanaController extends Controller
 
     public function edit(Bencana $bencana)
     {
-        try {
-            return view('bencana.edit', compact('bencana'));
-        } catch (\Exception $e) {
-            return back()->with('error', 'Terjadi kesalahan saat memuat form edit');
-        }
+        return view('bencana.edit', compact('bencana'));
     }
 
     public function update(Request $request, Bencana $bencana)
     {
-        try {
-            DB::beginTransaction();
+        $validated = $request->validate([
+            'tanggal' => 'required|date',
+            'jenis_bencana' => 'required|string',
+            'lokasi' => 'required|string',
+            'kecamatan' => 'required|string',
+            'deskripsi' => 'required|string',
+            'dampak' => 'nullable|string',
+            'dampak_korban' => 'nullable|string',
+            'dampak_kerusakan' => 'nullable|string',
+            'status' => 'required|in:Proses,Selesai',
+            'kerugian' => 'required|numeric'
+        ]);
 
-            $validated = $request->validate([
-                'tanggal' => 'required|date',
-                'jenis_bencana' => 'required|string|max:255',
-                'lokasi' => 'required|string|max:255',
-                'kecamatan' => 'required|string|max:255',
-                'deskripsi' => 'required|string',
-                'dampak' => 'required|string',
-                'korban_jiwa' => 'required|integer|min:0',
-                'kerusakan' => 'required|string|max:255',
-                'kerugian' => 'required|numeric|min:0',
-                'status' => 'required|in:Proses,Selesai',
-            ]);
+        $bencana->update($validated);
 
-            $bencana->update($validated);
-
-            DB::commit();
-            return redirect()->route('bencana.index')
-                           ->with('success', 'Data bencana berhasil diperbarui');
-
-        } catch (\Exception $e) {
-            DB::rollback();
-            return back()->with('error', 'Terjadi kesalahan saat memperbarui data')
-                        ->withInput();
-        }
+        return redirect()
+            ->route('bencana.index')
+            ->with('success', 'Data bencana berhasil diperbarui!');
     }
 
     public function destroy(Bencana $bencana)

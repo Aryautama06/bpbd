@@ -269,13 +269,26 @@
                     </div>
                 </div>
 
-                <!-- Alert Messages -->
+                <!-- Tambahkan di bagian atas konten utama -->
                 @if(session('success'))
-                <div class="mb-6 p-4 bg-green-50 border border-green-200 text-green-700 rounded-xl flex items-center">
-                    <svg class="w-5 h-5 mr-3 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                    </svg>
-                    {{ session('success') }}
+                <div class="mb-8 fade-in" x-data="{ show: true }" x-show="show">
+                    <div class="rounded-lg bg-green-50 p-4">
+                        <div class="flex items-center gap-3">
+                            <svg class="w-5 h-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                      d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                            </svg>
+                            <p class="text-sm font-medium text-green-800">
+                                {{ session('success') }}
+                            </p>
+                            <button @click="show = false" 
+                                    class="ml-auto text-green-600 hover:text-green-800">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
                 </div>
                 @endif
 
@@ -283,7 +296,7 @@
                 <div class="card">
                     <div class="overflow-x-auto">
                         <table class="min-w-full divide-y divide-gray-200">
-                            <thead>
+                            <thead class="bg-gray-50">
                                 <tr class="bg-gray-50">
                                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tanggal</th>
                                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Jenis Bencana</th>
@@ -296,7 +309,7 @@
                             </thead>
                             <tbody class="bg-white divide-y divide-gray-200">
                                 @forelse($bencanas as $bencana)
-                                <tr class="hover:bg-gray-50/50 transition-colors duration-150">
+                                <tr class="{{ $bencana->created_at->isToday() ? 'bg-green-50/50' : '' }} hover:bg-gray-50/50 transition-colors">
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                                         {{ $bencana->tanggal->format('d/m/Y') }}
                                     </td>

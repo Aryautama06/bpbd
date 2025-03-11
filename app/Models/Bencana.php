@@ -16,10 +16,10 @@ class Bencana extends Model
         'kecamatan',
         'deskripsi',
         'dampak',
-        'korban_jiwa',
-        'kerusakan',
-        'kerugian',
-        'status'
+        'dampak_korban',
+        'dampak_kerusakan',
+        'status',
+        'kerugian'
     ];
 
     protected $casts = [
