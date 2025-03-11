@@ -6,6 +6,7 @@ use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\BencanaController; 
+use App\Http\Controllers\PersonelController;
 use Illuminate\Support\Facades\Route;
 
 // Public Routes
@@ -69,6 +70,7 @@ Route::middleware(['auth'])->group(function () {
 
     // Resource Management Routes
     Route::resource('personel', PersonelController::class);
+    Route::get('/personel/{personel}', [PersonelController::class, 'show'])->name('personel.show');
     Route::resource('peralatan', PeralatanController::class);
     Route::resource('dana', DanaController::class);
 

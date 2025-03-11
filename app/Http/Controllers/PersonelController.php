@@ -2,63 +2,99 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Personel;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class PersonelController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
+        $personels = Personel::latest()->get();
+        return view('personel.index', compact('personels'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
-        //
+        return view('personel.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'nama' => 'required|string|max:255',
+            'nip' => 'nullable|string|unique:personels',
+            'jabatan' => 'required|string',
+            'status' => 'required|in:PNS,Kontrak,Sukarela',
+            'no_hp' => 'required|string',
+            'alamat' => 'required|string',
+            'jenis_kelamin' => 'required|in:L,P',
+            'tanggal_lahir' => 'required|date',
+            'foto' => 'nullable|image|max:2048'
+        ]);
+
+        if ($request->hasFile('foto')) {
+            $path = $request->file('foto')->store('personel-photos', 'public');
+            $validated['foto'] = $path;
+        }
+
+        Personel::create($validated);
+
+        return redirect()
+            ->route('personel.index')
+            ->with('success', 'Data personel berhasil ditambahkan!');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    public function edit(Personel $personel)
     {
-        //
+        return view('personel.edit', compact('personel'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
+    public function update(Request $request, Personel $personel)
     {
-        //
+        $validated = $request->validate([
+            'nama' => 'required|string|max:255',
+            'nip' => 'nullable|string|unique:personels,nip,' . $personel->id,
+            'jabatan' => 'required|string',
+            'status' => 'required|in:PNS,Kontrak,Sukarela',
+            'no_hp' => 'required|string',
+            'alamat' => 'required|string',
+            'jenis_kelamin' => 'required|in:L,P',
+            'tanggal_lahir' => 'required|date',
+            'foto' => 'nullable|image|max:2048'
+        ]);
+
+        if ($request->hasFile('foto')) {
+            // Hapus foto lama jika ada
+            if ($personel->foto) {
+                Storage::disk('public')->delete($personel->foto);
+            }
+            $path = $request->file('foto')->store('personel-photos', 'public');
+            $validated['foto'] = $path;
+        }
+
+        $personel->update($validated);
+
+        return redirect()
+            ->route('personel.index')
+            ->with('success', 'Data personel berhasil diperbarui!');
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+    public function destroy(Personel $personel)
     {
-        //
+        if ($personel->foto) {
+            Storage::disk('public')->delete($personel->foto);
+        }
+        
+        $personel->delete();
+
+        return redirect()
+            ->route('personel.index')
+            ->with('success', 'Data personel berhasil dihapus!');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
+    public function show(Personel $personel)
     {
-        //
+        return view('personel.show', compact('personel'));
     }
 }
