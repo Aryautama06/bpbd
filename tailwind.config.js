@@ -15,8 +15,14 @@ module.exports = {
                     light: '#F1FAEE',
                     dark: '#1D3557'
                 }
+            },
+            fontFamily: {
+                'sans': ['Inter', 'system-ui', 'sans-serif'],
+                'heading': ['Plus Jakarta Sans', 'system-ui', 'sans-serif']
             }
-        },
+        }
     },
-    plugins: [],
+    plugins: [
+        require('@tailwindcss/forms'),
+    ],
 }

@@ -5,6 +5,7 @@ use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\BencanaController; 
 use Illuminate\Support\Facades\Route;
 
 // Public Routes
@@ -55,7 +56,16 @@ Route::middleware(['auth'])->group(function () {
     });
 
     // Manajemen Bencana
+    Route::get('/bencana', [BencanaController::class, 'index'])->name('bencana.index');
     Route::resource('bencana', BencanaController::class);
+
+    // Manajemen Bencana Routes
+    Route::get('/bencana/create', [BencanaController::class, 'create'])->name('bencana.create');
+    Route::post('/bencana', [BencanaController::class, 'store'])->name('bencana.store');
+    Route::get('/bencana/{bencana}', [BencanaController::class, 'show'])->name('bencana.show');
+    Route::get('/bencana/{bencana}/edit', [BencanaController::class, 'edit'])->name('bencana.edit');
+    Route::put('/bencana/{bencana}', [BencanaController::class, 'update'])->name('bencana.update');
+    Route::delete('/bencana/{bencana}', [BencanaController::class, 'destroy'])->name('bencana.destroy');
 
     // Resource Management Routes
     Route::resource('personel', PersonelController::class);

@@ -28,11 +28,11 @@
             </h2>
             <div class="space-y-1">
                 <a href="{{ route('bencana.index') }}" 
-                   class="flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-lg {{ request()->routeIs('bencana.*') ? 'bg-bpbd-primary text-white' : 'text-gray-700 hover:bg-gray-100' }}">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                   class="flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-lg {{ request()->routeIs('bencana.*') ? 'bg-bpbd-primary hover:bg-bpbd-primary/90' : 'text-gray-700 hover:bg-gray-100' }}">
+                    <svg class="w-5 h-5 {{ request()->routeIs('bencana.*') ? 'text-white' : 'text-gray-500' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
                     </svg>
-                    <span>Data Bencana</span>
+                    <span class="{{ request()->routeIs('bencana.*') ? 'text-white' : 'text-gray-700' }}">Data Bencana</span>
                 </a>
             </div>
         </div>
