@@ -128,19 +128,6 @@
                                     </p>
                                 </div>
                             </div>
-
-                            <!-- Action Buttons -->
-                            <div class="flex items-center gap-3">
-                                <a href="{{ route('personel.edit', $personel) }}" 
-                                   class="inline-flex items-center gap-2 px-4 py-2 bg-white/10 text-white rounded-lg 
-                                          hover:bg-white/20 transition-colors focus:outline-none focus:ring-2 focus:ring-white/50">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
-                                              d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
-                                    </svg>
-                                    <span class="cursor-pointer">Edit Data</span>
-                                </a>
-                            </div>
                         </div>
                     </div>
                 </div>

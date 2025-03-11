@@ -54,30 +54,29 @@ class PersonelController extends Controller
     {
         $validated = $request->validate([
             'nama' => 'required|string|max:255',
-            'nip' => 'nullable|string|unique:personels,nip,' . $personel->id,
-            'jabatan' => 'required|string',
+            'nip' => 'nullable|string|max:255',
+            'jabatan' => 'required|string|max:255',
             'status' => 'required|in:PNS,Kontrak,Sukarela',
-            'no_hp' => 'required|string',
-            'alamat' => 'required|string',
             'jenis_kelamin' => 'required|in:L,P',
             'tanggal_lahir' => 'required|date',
+            'no_hp' => 'required|string|max:255',
+            'alamat' => 'required|string',
             'foto' => 'nullable|image|max:2048'
         ]);
 
         if ($request->hasFile('foto')) {
-            // Hapus foto lama jika ada
+            // Delete old photo if exists
             if ($personel->foto) {
-                Storage::disk('public')->delete($personel->foto);
+                Storage::delete($personel->foto);
             }
-            $path = $request->file('foto')->store('personel-photos', 'public');
-            $validated['foto'] = $path;
+            $validated['foto'] = $request->file('foto')->store('public/personel');
         }
 
         $personel->update($validated);
 
         return redirect()
-            ->route('personel.index')
-            ->with('success', 'Data personel berhasil diperbarui!');
+            ->route('personel.show', $personel)
+            ->with('success', 'Data personel berhasil diperbarui');
     }
 
     public function destroy(Personel $personel)

@@ -2,63 +2,80 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Peralatan;
 use Illuminate\Http\Request;
 
 class PeralatanController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
+        $peralatan = Peralatan::latest()->get();
+        return view('peralatan.index', compact('peralatan'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
-        //
+        return view('peralatan.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'nama_alat' => 'required|string|max:255',
+            'kode_alat' => 'required|string|unique:peralatan',
+            'kategori' => 'required|string',
+            'jumlah' => 'required|integer|min:0',
+            'kondisi' => 'required|in:Baik,Rusak Ringan,Rusak Berat',
+            'spesifikasi' => 'nullable|string',
+            'lokasi_penyimpanan' => 'required|string',
+            'tanggal_pengadaan' => 'required|date',
+            'keterangan' => 'nullable|string'
+        ]);
+
+        Peralatan::create($validated);
+
+        return redirect()
+            ->route('peralatan.index')
+            ->with('success', 'Data peralatan berhasil ditambahkan');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    public function show(Peralatan $peralatan)
     {
-        //
+        return view('peralatan.show', compact('peralatan'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
+    public function edit(Peralatan $peralatan)
     {
-        //
+        return view('peralatan.edit', compact('peralatan'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+    public function update(Request $request, Peralatan $peralatan)
     {
-        //
+        $validated = $request->validate([
+            'nama_alat' => 'required|string|max:255',
+            'kode_alat' => 'required|string|unique:peralatan,kode_alat,' . $peralatan->id,
+            'kategori' => 'required|string',
+            'jumlah' => 'required|integer|min:0',
+            'kondisi' => 'required|in:Baik,Rusak Ringan,Rusak Berat',
+            'spesifikasi' => 'nullable|string',
+            'lokasi_penyimpanan' => 'required|string',
+            'tanggal_pengadaan' => 'required|date',
+            'keterangan' => 'nullable|string'
+        ]);
+
+        $peralatan->update($validated);
+
+        return redirect()
+            ->route('peralatan.show', $peralatan)
+            ->with('success', 'Data peralatan berhasil diperbarui');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
+    public function destroy(Peralatan $peralatan)
     {
-        //
+        $peralatan->delete();
+
+        return redirect()
+            ->route('peralatan.index')
+            ->with('success', 'Data peralatan berhasil dihapus');
     }
 }

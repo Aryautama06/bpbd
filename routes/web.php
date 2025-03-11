@@ -7,6 +7,7 @@ use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\BencanaController; 
 use App\Http\Controllers\PersonelController;
+use App\Http\Controllers\PeralatanController;
 use Illuminate\Support\Facades\Route;
 
 // Public Routes
@@ -71,7 +72,12 @@ Route::middleware(['auth'])->group(function () {
     // Resource Management Routes
     Route::resource('personel', PersonelController::class);
     Route::get('/personel/{personel}', [PersonelController::class, 'show'])->name('personel.show');
+    Route::get('/personel/{personel}/edit', [PersonelController::class, 'edit'])->name('personel.edit');
+    Route::put('/personel/{personel}', [PersonelController::class, 'update'])->name('personel.update');
     Route::resource('peralatan', PeralatanController::class);
+    Route::get('/peralatan/{peralatan}', [PeralatanController::class, 'show'])->name('peralatan.show');
+    Route::get('/peralatan/{peralatan}/edit', [PeralatanController::class, 'edit'])->name('peralatan.edit');
+    Route::put('/peralatan/{peralatan}', [PeralatanController::class, 'update'])->name('peralatan.update');
     Route::resource('dana', DanaController::class);
 
     // SPK Routes
