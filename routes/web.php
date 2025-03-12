@@ -8,6 +8,10 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\BencanaController; 
 use App\Http\Controllers\PersonelController;
 use App\Http\Controllers\PeralatanController;
+use App\Http\Controllers\DanaController;
+use App\Http\Controllers\KriteriaController;
+use App\Http\Controllers\AlternatifController;
+use App\Http\Controllers\PerhitunganController;
 use Illuminate\Support\Facades\Route;
 
 // Public Routes
@@ -79,11 +83,28 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/peralatan/{peralatan}/edit', [PeralatanController::class, 'edit'])->name('peralatan.edit');
     Route::put('/peralatan/{peralatan}', [PeralatanController::class, 'update'])->name('peralatan.update');
     Route::resource('dana', DanaController::class);
+    Route::get('/dana/{dana}', [DanaController::class, 'show'])->name('dana.show');
+    Route::get('/dana/{dana}/edit', [DanaController::class, 'edit'])->name('dana.edit');
+    Route::put('/dana/{dana}', [DanaController::class, 'update'])->name('dana.update');
 
     // SPK Routes
-    Route::resource('kriteria', KriteriaController::class);
-    Route::resource('alternatif', AlternatifController::class);
-    Route::get('/perhitungan/ahp', [PerhitunganController::class, 'ahp'])->name('perhitungan.ahp');
-    Route::get('/perhitungan/topsis', [PerhitunganController::class, 'topsis'])->name('perhitungan.topsis');
-    Route::get('/hasil-analisis', [HasilAnalisisController::class, 'index'])->name('hasil.analisis');
+    Route::resource('kriteria', KriteriaController::class)->parameters([
+        'kriteria' => 'kriteria'
+    ]);
+    Route::get('/kriteria/{kriteria}', [KriteriaController::class, 'show'])->name('kriteria.show');
+    Route::get('/kriteria/{kriteria}/edit', [KriteriaController::class, 'edit'])->name('kriteria.edit');
+    Route::put('/kriteria/{kriteria}', [KriteriaController::class, 'update'])->name('kriteria.update');
+    Route::resource('alternatif', AlternatifController::class)->parameters([
+        'alternatif' => 'alternatif'
+    ]);
+    Route::get('/alternatif/{alternatif}', [AlternatifController::class, 'show'])->name('alternatif.show');
+    Route::get('/alternatif/{alternatif}/edit', [AlternatifController::class, 'edit'])->name('alternatif.edit');
+    Route::put('/alternatif/{alternatif}', [AlternatifController::class, 'update'])->name('alternatif.update');
+
+    Route::prefix('perhitungan')->name('perhitungan.')->group(function () {
+        Route::get('/ahp', [PerhitunganController::class, 'ahp'])->name('ahp');
+        Route::get('/', [PerhitunganController::class, 'index'])->name('index');
+        Route::post('/nilai', [PerhitunganController::class, 'nilaiAlternatif'])->name('nilai');
+    });
+
 });

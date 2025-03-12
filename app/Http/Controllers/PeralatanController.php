@@ -66,7 +66,7 @@ class PeralatanController extends Controller
         $peralatan->update($validated);
 
         return redirect()
-            ->route('peralatan.show', $peralatan)
+            ->route('peralatan.index')
             ->with('success', 'Data peralatan berhasil diperbarui');
     }
 
