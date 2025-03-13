@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>Perhitungan AHP - BPBD</title>
+    <title>Perhitungan - BPBD</title>
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
@@ -27,7 +27,7 @@
             }
         }
     </script>
-
+    
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
 </head>
@@ -52,8 +52,8 @@
                                     </svg>
                                 </div>
                                 <div>
-                                    <h1 class="text-3xl font-bold text-white">Hasil Perhitungan AHP</h1>
-                                    <p class="text-blue-100 mt-1">Analytical Hierarchy Process</p>
+                                    <h1 class="text-3xl font-bold text-white">Perhitungan SPK</h1>
+                                    <p class="text-blue-100 mt-1">Sistem Pendukung Keputusan dengan AHP-TOPSIS</p>
                                 </div>
                             </div>
                         </div>
@@ -62,84 +62,102 @@
 
                 <!-- Content Section -->
                 <div class="py-8 px-8">
-                    <div class="max-w-7xl mx-auto space-y-8">
-                        <!-- Matriks Perbandingan -->
-                        <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-                            <div class="p-6 border-b border-gray-200">
-                                <h2 class="text-lg font-semibold text-gray-900">Matriks Perbandingan</h2>
-                                <p class="mt-1 text-sm text-gray-500">Perbandingan nilai antar kriteria</p>
-                            </div>
-                            <div class="overflow-x-auto">
-                                <table class="min-w-full divide-y divide-gray-200">
-                                    <thead class="bg-gray-50">
-                                        <tr>
-                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Kriteria</th>
-                                            @foreach($kriterias as $kriteria)
-                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                                {{ $kriteria->kode_kriteria }}
-                                            </th>
-                                            @endforeach
-                                        </tr>
-                                    </thead>
-                                    <tbody class="bg-white divide-y divide-gray-200">
-                                        @foreach($kriterias as $kriteria1)
-                                        <tr>
-                                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                                                {{ $kriteria1->kode_kriteria }}
-                                            </td>
-                                            @foreach($kriterias as $kriteria2)
-                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                                {{ $matriksPerbandingan[$kriteria1->id][$kriteria2->id] ?? '-' }}
-                                            </td>
-                                            @endforeach
-                                        </tr>
-                                        @endforeach
-                                    </tbody>
-                                </table>
+                    <div class="max-w-7xl mx-auto">
+                        <!-- Overview Section -->
+                        <div class="mb-8">
+                            <h2 class="text-xl font-semibold text-gray-900">Ringkasan Data</h2>
+                            <div class="mt-4 grid grid-cols-1 md:grid-cols-3 gap-6">
+                                <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                                    <div class="flex items-center gap-4">
+                                        <div class="p-3 bg-blue-50 rounded-xl">
+                                            <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+                                            </svg>
+                                        </div>
+                                        <div>
+                                            <p class="text-sm text-gray-500">Total Alternatif</p>
+                                            <p class="text-2xl font-semibold text-gray-900">{{ $alternatifs->count() }}</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                                    <div class="flex items-center gap-4">
+                                        <div class="p-3 bg-indigo-50 rounded-xl">
+                                            <svg class="w-6 h-6 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
+                                            </svg>
+                                        </div>
+                                        <div>
+                                            <p class="text-sm text-gray-500">Total Kriteria</p>
+                                            <p class="text-2xl font-semibold text-gray-900">{{ $kriterias->count() }}</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                                    <div class="flex items-center gap-4">
+                                        <div class="p-3 bg-purple-50 rounded-xl">
+                                            <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z"/>
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z"/>
+                                            </svg>
+                                        </div>
+                                        <div>
+                                            <p class="text-sm text-gray-500">Total Penilaian</p>
+                                            <p class="text-2xl font-semibold text-gray-900">{{ $nilaiAlternatifs->count() }}</p>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
-                        <!-- Hasil Perangkingan -->
-                        <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-                            <div class="p-6 border-b border-gray-200">
-                                <h2 class="text-lg font-semibold text-gray-900">Hasil Perangkingan</h2>
-                                <p class="mt-1 text-sm text-gray-500">Urutan alternatif berdasarkan nilai akhir</p>
+                        <!-- Methods Section -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <!-- AHP Card -->
+                            <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden hover:border-blue-500 transition-colors group">
+                                <a href="{{ route('perhitungan.ahp') }}" class="block p-6">
+                                    <div class="flex items-center justify-between">
+                                        <div class="flex items-center gap-4">
+                                            <div class="p-3 bg-blue-50 rounded-xl group-hover:bg-blue-100 transition-colors">
+                                                <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+                                                </svg>
+                                            </div>
+                                            <div>
+                                                <h3 class="text-lg font-semibold text-gray-900">1. Perhitungan AHP</h3>
+                                                <p class="text-gray-500 mt-1">Analytical Hierarchy Process</p>
+                                                <p class="text-sm text-gray-500 mt-2">Menghitung bobot kriteria dan nilai alternatif menggunakan metode AHP</p>
+                                            </div>
+                                        </div>
+                                        <svg class="w-5 h-5 text-gray-400 group-hover:text-blue-600 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                                        </svg>
+                                    </div>
+                                </a>
                             </div>
-                            <div class="overflow-x-auto">
-                                <table class="min-w-full divide-y divide-gray-200">
-                                    <thead class="bg-gray-50">
-                                        <tr>
-                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Peringkat</th>
-                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Alternatif</th>
-                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nilai Akhir</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody class="bg-white divide-y divide-gray-200">
-                                        @foreach($nilaiAkhir as $alternatifId => $nilai)
-                                        @php
-                                            $alternatif = $alternatifs->find($alternatifId);
-                                        @endphp
-                                        <tr class="{{ $loop->first ? 'bg-green-50' : '' }}">
-                                            <td class="px-6 py-4 whitespace-nowrap">
-                                                <span class="inline-flex items-center justify-center w-6 h-6 {{ $loop->first ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800' }} rounded-full text-sm font-medium">
-                                                    {{ $loop->iteration }}
-                                                </span>
-                                            </td>
-                                            <td class="px-6 py-4 whitespace-nowrap">
-                                                <div class="flex flex-col">
-                                                    <span class="text-sm font-medium text-gray-900">{{ $alternatif->nama_alternatif }}</span>
-                                                    <span class="text-sm text-gray-500">{{ $alternatif->kode_alternatif }}</span>
-                                                </div>
-                                            </td>
-                                            <td class="px-6 py-4 whitespace-nowrap">
-                                                <span class="text-sm {{ $loop->first ? 'font-medium text-green-800' : 'text-gray-900' }}">
-                                                    {{ number_format($nilai, 4) }}
-                                                </span>
-                                            </td>
-                                        </tr>
-                                        @endforeach
-                                    </tbody>
-                                </table>
+
+                            <!-- TOPSIS Card -->
+                            <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden hover:border-blue-500 transition-colors group">
+                                <a href="{{ route('perhitungan.topsis') }}" class="block p-6">
+                                    <div class="flex items-center justify-between">
+                                        <div class="flex items-center gap-4">
+                                            <div class="p-3 bg-blue-50 rounded-xl group-hover:bg-blue-100 transition-colors">
+                                                <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/>
+                                                </svg>
+                                            </div>
+                                            <div>
+                                                <h3 class="text-lg font-semibold text-gray-900">2. Perhitungan TOPSIS</h3>
+                                                <p class="text-gray-500 mt-1">Technique for Order of Preference by Similarity to Ideal Solution</p>
+                                                <p class="text-sm text-gray-500 mt-2">Perangkingan alternatif menggunakan bobot dari hasil AHP</p>
+                                            </div>
+                                        </div>
+                                        <svg class="w-5 h-5 text-gray-400 group-hover:text-blue-600 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                                        </svg>
+                                    </div>
+                                </a>
                             </div>
                         </div>
                     </div>
