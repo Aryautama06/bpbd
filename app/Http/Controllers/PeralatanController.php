@@ -78,4 +78,9 @@ class PeralatanController extends Controller
             ->route('peralatan.index')
             ->with('success', 'Data peralatan berhasil dihapus');
     }
+
+    public function detail(Peralatan $peralatan)
+    {
+        return response()->json($peralatan);
+    }
 }

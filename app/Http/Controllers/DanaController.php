@@ -92,14 +92,17 @@ class DanaController extends Controller
 
     public function destroy(Dana $dana)
     {
-        if ($dana->dokumen) {
-            Storage::delete($dana->dokumen);
+        try {
+            $kode = $dana->kode_dana;
+            $dana->delete();
+            
+            return redirect()
+                ->route('dana.index')
+                ->with('success', "Dana dengan kode '$kode' berhasil dihapus");
+        } catch (\Exception $e) {
+            return redirect()
+                ->route('dana.index')
+                ->with('error', 'Terjadi kesalahan saat menghapus data dana');
         }
-        
-        $dana->delete();
-
-        return redirect()
-            ->route('dana.index')
-            ->with('success', 'Data dana berhasil dihapus');
     }
 }

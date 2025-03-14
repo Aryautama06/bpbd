@@ -13,12 +13,11 @@ use App\Http\Controllers\KriteriaController;
 use App\Http\Controllers\AlternatifController;
 use App\Http\Controllers\PerhitunganController;
 use App\Http\Controllers\AnalisisController;
+use App\Http\Controllers\WelcomeController;
 use Illuminate\Support\Facades\Route;
 
 // Public Routes
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', [WelcomeController::class, 'index']);
 
 Route::get('/berita', function () {
     return view('berita.index');
@@ -52,10 +51,8 @@ Route::post('password/reset', [ResetPasswordController::class, 'reset'])
     ->name('password.update');
 
 // Protected Routes
-Route::middleware(['auth'])->group(function () {
-    Route::get('/dashboard', function () {
-        return view('dashboard');
-    })->name('dashboard');
+Route::middleware('auth')->group(function () {
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     // Redirect /home to /dashboard
     Route::get('/home', function () {
@@ -83,6 +80,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/peralatan/{peralatan}', [PeralatanController::class, 'show'])->name('peralatan.show');
     Route::get('/peralatan/{peralatan}/edit', [PeralatanController::class, 'edit'])->name('peralatan.edit');
     Route::put('/peralatan/{peralatan}', [PeralatanController::class, 'update'])->name('peralatan.update');
+    Route::get('/peralatan/{peralatan}/detail', [PeralatanController::class, 'detail'])->name('peralatan.detail');
     Route::resource('dana', DanaController::class);
     Route::get('/dana/{dana}', [DanaController::class, 'show'])->name('dana.show');
     Route::get('/dana/{dana}/edit', [DanaController::class, 'edit'])->name('dana.edit');

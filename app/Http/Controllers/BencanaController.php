@@ -84,17 +84,16 @@ class BencanaController extends Controller
     public function destroy(Bencana $bencana)
     {
         try {
-            DB::beginTransaction();
-            
+            $nama = $bencana->nama_bencana;
             $bencana->delete();
             
-            DB::commit();
-            return redirect()->route('bencana.index')
-                           ->with('success', 'Data bencana berhasil dihapus');
-
+            return redirect()
+                ->route('bencana.index')
+                ->with('success', "Data bencana '$nama' berhasil dihapus");
         } catch (\Exception $e) {
-            DB::rollback();
-            return back()->with('error', 'Terjadi kesalahan saat menghapus data');
+            return redirect()
+                ->route('bencana.index')
+                ->with('error', 'Terjadi kesalahan saat menghapus data bencana');
         }
     }
 }

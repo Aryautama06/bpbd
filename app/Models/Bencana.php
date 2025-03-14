@@ -25,4 +25,6 @@ class Bencana extends Model
     protected $casts = [
         'tanggal' => 'date'
     ];
+
+    protected $guarded = [];
 }

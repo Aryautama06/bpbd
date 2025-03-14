@@ -89,15 +89,18 @@ class PersonelController extends Controller
 
     public function destroy(Personel $personel)
     {
-        if ($personel->foto) {
-            Storage::disk('public')->delete($personel->foto);
+        try {
+            $nama = $personel->nama;
+            $personel->delete();
+            
+            return redirect()
+                ->route('personel.index')
+                ->with('success', "Data personel '$nama' berhasil dihapus");
+        } catch (\Exception $e) {
+            return redirect()
+                ->route('personel.index')
+                ->with('error', 'Terjadi kesalahan saat menghapus data personel');
         }
-        
-        $personel->delete();
-
-        return redirect()
-            ->route('personel.index')
-            ->with('success', 'Data personel berhasil dihapus!');
     }
 
     public function show(Personel $personel)

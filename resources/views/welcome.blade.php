@@ -416,7 +416,7 @@
                                     <button class="p-4 rounded-lg bg-white/5 border border-white/10 hover:bg-white/10 transition-colors">
                                         <svg class="w-6 h-6 text-white mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
                                         </svg>
                                         Lokasi
                                     </button>
@@ -573,83 +573,95 @@
 
         <!-- Statistics Section -->
         <section class="relative py-24 overflow-hidden">
-    <!-- Background with gradient overlay -->
     <div class="absolute inset-0 bg-gradient-to-br from-bpbd-primary/90 to-bpbd-secondary/90">
         <div class="absolute inset-0 bg-[url('/images/pattern-grid.png')] opacity-10"></div>
     </div>
-
-    <!-- Animated particles background -->
+    
     <div class="absolute inset-0" id="stats-particles"></div>
 
-    <!-- Content -->
     <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <!-- Section Header -->
         <div class="text-center mb-16" data-aos="fade-up">
-            <h2 class="text-3xl font-bold text-white mb-4">Statistik Penanganan Bencana</h2>
+            <h2 class="text-3xl font-bold text-white mb-4">Data Statistik BPBD</h2>
             <div class="w-24 h-1 bg-gradient-to-r from-white/40 to-white/10 mx-auto rounded-full"></div>
         </div>
 
-        <!-- Stats Grid -->
         <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
-            <!-- Stat 1 -->
+            <!-- Bencana Stats -->
             <div class="relative group" data-aos="fade-up" data-aos-delay="100">
                 <div class="absolute inset-0 bg-white/5 rounded-2xl transform group-hover:scale-105 transition-transform duration-500"></div>
                 <div class="relative p-8 text-center">
-                    <div class="w-16 h-16 bg-white/10 rounded-xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-500">
+                    <div class="w-16 h-16 bg-white/10 rounded-xl flex items-center justify-center mx-auto mb-6">
                         <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
                         </svg>
                     </div>
-                    <div class="text-4xl font-bold text-white mb-2 tracking-tight">
-                        <span class="inline-block" data-count="2500">0</span>+
+                    <div class="text-4xl font-bold text-white mb-2">
+                        {{ $stats['bencana']['total'] ?? 0 }}
                     </div>
-                    <div class="text-lg text-white/80">Bencana Tertangani</div>
+                    <div class="text-lg text-white/80">Total Bencana</div>
+                    <div class="text-sm text-white/60 mt-2">
+                        {{ $stats['bencana']['bulan_ini'] ?? 0 }} bulan ini
+                    </div>
                 </div>
             </div>
 
-            <!-- Stat 2 -->
+            <!-- Personel Stats -->
             <div class="relative group" data-aos="fade-up" data-aos-delay="200">
                 <div class="absolute inset-0 bg-white/5 rounded-2xl transform group-hover:scale-105 transition-transform duration-500"></div>
                 <div class="relative p-8 text-center">
-                    <div class="w-16 h-16 bg-white/10 rounded-xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-500">
+                    <div class="w-16 h-16 bg-white/10 rounded-xl flex items-center justify-center mx-auto mb-6">
                         <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
                         </svg>
                     </div>
-                    <div class="text-4xl font-bold text-white mb-2 tracking-tight">
-                        <span class="inline-block" data-count="500">0</span>+
+                    <div class="text-4xl font-bold text-white mb-2">
+                        {{ $stats['personel']['total'] ?? 0 }}
                     </div>
-                    <div class="text-lg text-white/80">Relawan Aktif</div>
+                    <div class="text-lg text-white/80">Total Personel</div>
+                    <div class="text-sm text-white/60 mt-2">
+                        {{ $stats['personel']['pns'] ?? 0 }} PNS • 
+                        {{ $stats['personel']['kontrak'] ?? 0 }} Kontrak • 
+                        {{ $stats['personel']['sukarela'] ?? 0 }} Sukarela
+                    </div>
                 </div>
             </div>
 
-            <!-- Stat 3 -->
+            <!-- Peralatan Stats -->
             <div class="relative group" data-aos="fade-up" data-aos-delay="300">
                 <div class="absolute inset-0 bg-white/5 rounded-2xl transform group-hover:scale-105 transition-transform duration-500"></div>
                 <div class="relative p-8 text-center">
-                    <div class="w-16 h-16 bg-white/10 rounded-xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-500">
+                    <div class="w-16 h-16 bg-white/10 rounded-xl flex items-center justify-center mx-auto mb-6">
                         <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z"/>
                         </svg>
                     </div>
-                    <div class="text-4xl font-bold text-white mb-2 tracking-tight">
-                        <span class="inline-block" data-count="50000">0</span>+
+                    <div class="text-4xl font-bold text-white mb-2">
+                        {{ $stats['peralatan']['total'] ?? 0 }}
                     </div>
-                    <div class="text-lg text-white/80">Warga Terbantu</div>
+                    <div class="text-lg text-white/80">Total Peralatan</div>
+                    <div class="text-sm text-white/60 mt-2">
+                        {{ $stats['peralatan']['baik'] ?? 0 }} Baik • 
+                        {{ $stats['peralatan']['rusak_ringan'] ?? 0 }} Rusak Ringan
+                    </div>
                 </div>
             </div>
 
-            <!-- Stat 4 -->
+            <!-- Dana Stats -->
             <div class="relative group" data-aos="fade-up" data-aos-delay="400">
                 <div class="absolute inset-0 bg-white/5 rounded-2xl transform group-hover:scale-105 transition-transform duration-500"></div>
                 <div class="relative p-8 text-center">
-                    <div class="w-16 h-16 bg-white/10 rounded-xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-500">
+                    <div class="w-16 h-16 bg-white/10 rounded-xl flex items-center justify-center mx-auto mb-6">
                         <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
                         </svg>
                     </div>
-                    <div class="text-4xl font-bold text-white mb-2 tracking-tight">24/7</div>
-                    <div class="text-lg text-white/80">Dukungan Siaga</div>
+                    <div class="text-4xl font-bold text-white mb-2">
+                        Rp {{ number_format($stats['dana']['tersedia'] ?? 0, 0, ',', '.') }}
+                    </div>
+                    <div class="text-lg text-white/80">Dana Tersedia</div>
+                    <div class="text-sm text-white/60 mt-2">
+                        {{ number_format(($stats['dana']['terpakai'] ?? 0) / max($stats['dana']['total'] ?? 1, 1) * 100, 1) }}% terpakai
+                    </div>
                 </div>
             </div>
         </div>

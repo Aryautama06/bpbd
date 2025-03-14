@@ -2,24 +2,23 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Bencana;
 use App\Models\Personel;
 use App\Models\Peralatan;
 use App\Models\Dana;
-use App\Models\Bencana;
-use App\Models\HasilPerhitungan;
 use Illuminate\Http\Request;
 
-class DashboardController extends Controller
+class WelcomeController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('auth');
-    }
-
     public function index()
     {
-        // Get latest data counts
         $stats = [
+            'bencana' => [
+                'total' => Bencana::count(),
+                'bulan_ini' => Bencana::whereMonth('created_at', now()->month)
+                    ->whereYear('created_at', now()->year)
+                    ->count(),
+            ],
             'personel' => [
                 'total' => Personel::count(),
                 'pns' => Personel::where('status', 'PNS')->count(),
@@ -36,21 +35,9 @@ class DashboardController extends Controller
                 'total' => Dana::sum('jumlah'),
                 'tersedia' => Dana::where('status', 'Tersedia')->sum('jumlah'),
                 'terpakai' => Dana::where('status', 'Terpakai')->sum('jumlah'),
-                'count' => Dana::count(),
-            ],
-            'bencana' => [
-                'total' => Bencana::count(),
-                'bulan_ini' => Bencana::whereMonth('tanggal', now()->month)
-                    ->whereYear('tanggal', now()->year)
-                    ->count(),
-                'tahun_ini' => Bencana::whereYear('tanggal', now()->year)->count(),
-            ],
-            'perhitungan' => [
-                'total' => HasilPerhitungan::count(),
-                'terakhir' => HasilPerhitungan::latest()->first(),
             ],
         ];
 
-        return view('dashboard', compact('stats'));
+        return view('welcome', compact('stats'));
     }
 }

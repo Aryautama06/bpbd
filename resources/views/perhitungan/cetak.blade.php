@@ -158,7 +158,7 @@
 
     <!-- Signature -->
     <div class="signature">
-        <p>Bondowoso, {{ now()->format('d F Y') }}</p>
+        <p>Deli Serdang, {{ now()->format('d F Y') }}</p>
         <p>Kepala BPBD Kabupaten Deli Serdang</p>
         <br><br><br>
         <p style="font-weight: bold; text-decoration: underline;">Nama Kepala BPBD</p>

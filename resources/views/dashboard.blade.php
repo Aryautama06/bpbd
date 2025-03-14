@@ -3,27 +3,12 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="csrf-token" content="{{ csrf_token() }}">
-    
-    <title>Dashboard - BPBD Deli Serdang</title>
+    <title>Dashboard - {{ config('app.name') }}</title>
 
-    <!-- Enhanced Font Selection -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    
-    <!-- Styles -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
-    <style>
-        .font-heading {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-        }
-        .font-body {
-            font-family: 'Inter', sans-serif;
-        }
-    </style>
-
+    <!-- Tambahkan script Tailwind CDN sebagai fallback -->
+    <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
             theme: {
@@ -36,269 +21,261 @@
                             light: '#F1FAEE',
                             dark: '#1D3557'
                         }
-                    },
-                    fontFamily: {
-                        'sans': ['Inter', 'system-ui', 'sans-serif'],
-                        'heading': ['Plus Jakarta Sans', 'system-ui', 'sans-serif']
                     }
                 }
             }
         }
     </script>
+    
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>  
+
 </head>
-<body class="font-body antialiased">
-    <div class="min-h-screen bg-gray-50">
-        <!-- Include Sidebar -->
-        @include('components.sidebar')
+<body class="min-h-screen bg-gray-50">
+    @include('components.sidebar')
 
-        <!-- Main Content -->
-        <main class="ml-64 p-8">
-            <!-- Header Section -->
-            <div class="mb-8">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <h1 class="font-heading text-3xl font-bold text-bpbd-secondary tracking-tight">Dashboard SPK BPBD</h1>
-                        <p class="mt-2 text-base text-gray-600 leading-relaxed">Sistem Pendukung Keputusan Alokasi Sumber Daya Multi-Bencana</p>
-                    </div>
-                    <div class="flex items-center gap-4">
-                        <button class="flex items-center px-4 py-2 bg-white border border-gray-200 rounded-lg shadow-sm hover:bg-gray-50">
-                            <svg class="w-5 h-5 mr-2 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-                            </svg>
-                            {{ now()->format('d M Y') }}
-                        </button>
-                        <button class="flex items-center px-4 py-2 text-white bg-bpbd-primary rounded-lg shadow-sm hover:bg-bpbd-primary/90">
-                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
-                            </svg>
-                            Tambah Laporan
-                        </button>
-                    </div>
-                </div>
+    <div class="lg:pl-64">
+        <!-- Header -->
+        <div class="relative overflow-hidden bg-gradient-to-br from-bpbd-secondary to-bpbd-accent">
+            <div class="absolute inset-0 opacity-10">
+                <div class="absolute inset-0" style="background-image: radial-gradient(circle at 2px 2px, rgba(255,255,255,0.1) 1px, transparent 0); background-size: 24px 24px;"></div>
             </div>
-
-            <!-- Stats Overview -->
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-                <!-- Total Bencana -->
-                <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-200">
-                    <div class="flex items-center justify-between mb-4">
-                        <div class="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center">
-                            <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
-                            </svg>
+            <div class="relative py-12 px-8">
+                <div class="max-w-7xl mx-auto">
+                    <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-8">
+                        <div class="flex items-center gap-6">
+                            <div class="p-4 bg-white/10 backdrop-blur-lg rounded-2xl">
+                                <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                          d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <h1 class="text-3xl font-bold text-white">Dashboard</h1>
+                                <p class="text-blue-100 mt-1">Ringkasan data dan aktivitas BPBD</p>
+                            </div>
                         </div>
-                        <span class="text-xs font-medium text-gray-500">30 Hari Terakhir</span>
-                    </div>
-                    <h3 class="text-2xl font-heading font-bold text-gray-900">24</h3>
-                    <p class="text-sm font-medium text-gray-600">Total Bencana</p>
-                    <div class="mt-2 flex items-center text-green-600 text-sm">
-                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/>
-                        </svg>
-                        <span>12% dari bulan lalu</span>
-                    </div>
-                </div>
-
-                <!-- Personel Aktif -->
-                <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-200">
-                    <div class="flex items-center justify-between mb-4">
-                        <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
-                            <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
-                            </svg>
+                        <div class="flex items-center gap-4">
+                            <span class="text-white bg-white/10 px-4 py-2 rounded-lg backdrop-blur-lg">
+                                {{ now()->format('d M Y') }}
+                            </span>
                         </div>
-                        <span class="text-xs font-medium text-gray-500">Real-time</span>
                     </div>
-                    <h3 class="text-2xl font-heading font-bold text-gray-900">156</h3>
-                    <p class="text-sm font-medium text-gray-600">Personel Aktif</p>
-                    <div class="mt-2 flex items-center text-green-600 text-sm">
-                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/>
-                        </svg>
-                        <span>8% dari minggu lalu</span>
-                    </div>
-                </div>
 
-                <!-- Peralatan Tersedia -->
-                <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-200">
-                    <div class="flex items-center justify-between mb-4">
-                        <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
-                            <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z"/>
-                            </svg>
-                        </div>
-                        <span class="text-xs font-medium text-gray-500">Status</span>
-                    </div>
-                    <h3 class="text-2xl font-heading font-bold text-gray-900">85%</h3>
-                    <p class="text-sm font-medium text-gray-600">Peralatan Siap</p>
-                    <div class="mt-2 flex items-center text-yellow-600 text-sm">
-                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4"/>
-                        </svg>
-                        <span>Stabil</span>
-                    </div>
-                </div>
-
-                <!-- Dana Tersedia -->
-                <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-200">
-                    <div class="flex items-center justify-between mb-4">
-                        <div class="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center">
-                            <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                            </svg>
-                        </div>
-                        <span class="text-xs font-medium text-gray-500">Anggaran</span>
-                    </div>
-                    <h3 class="text-2xl font-heading font-bold text-gray-900">Rp 2.5M</h3>
-                    <p class="text-sm font-medium text-gray-600">Dana Tersedia</p>
-                    <div class="mt-2 flex items-center text-red-600 text-sm">
-                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 17h8m0 0V9m0 8l-8-8-4 4-6-6"/>
-                        </svg>
-                        <span>15% penggunaan</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Main Content Grid -->
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <!-- Map and Status - Spans 2 columns -->
-                <div class="lg:col-span-2 space-y-6">
-                    <!-- Map -->
-                    <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-200">
-                        <div class="flex items-center justify-between mb-4">
-                            <h3 class="font-heading font-semibold text-lg text-gray-900">Sebaran Bencana</h3>
-                            <div class="flex items-center space-x-2">
-                                <select class="text-sm border-gray-200 rounded-lg">
-                                    <option>Semua Kecamatan</option>
-                                    <!-- Add 22 districts here -->
-                                </select>
-                                <button class="p-2 text-gray-400 hover:text-gray-600">
-                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+                    <!-- Quick Stats -->
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mt-8">
+                        <!-- Personnel Stats -->
+                        <div class="bg-white/10 backdrop-blur-lg rounded-xl p-6">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-sm font-medium text-blue-100">Total Personel</p>
+                                    <p class="text-2xl font-bold text-white mt-2">{{ $stats['personel']['total'] }}</p>
+                                </div>
+                                <div class="p-3 bg-blue-400/20 rounded-lg">
+                                    <svg class="w-6 h-6 text-blue-100" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                              d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
                                     </svg>
-                                </button>
+                                </div>
+                            </div>
+                            <div class="mt-4 flex items-center text-sm text-blue-100">
+                                <span>{{ $stats['personel']['pns'] }} PNS</span>
+                                <span class="mx-2">•</span>
+                                <span>{{ $stats['personel']['kontrak'] }} Kontrak</span>
+                                <span class="mx-2">•</span>
+                                <span>{{ $stats['personel']['sukarela'] }} Sukarela</span>
                             </div>
                         </div>
-                        <div class="aspect-video bg-gray-100 rounded-lg">
-                            <!-- Add your map component here -->
-                            <div class="flex items-center justify-center h-full text-gray-400">
-                                Peta Sebaran Bencana
-                            </div>
-                        </div>
-                    </div>
 
-                    <!-- Recent Events -->
-                    <div class="bg-white rounded-xl shadow-sm border border-gray-200">
-                        <div class="p-6 border-b border-gray-200">
-                            <h3 class="font-heading font-semibold text-lg text-gray-900">Kejadian Terkini</h3>
-                        </div>
-                        <div class="divide-y divide-gray-200">
-                            @for ($i = 0; $i < 3; $i++)
-                            <div class="p-6 hover:bg-gray-50">
-                                <div class="flex items-center justify-between mb-4">
-                                    <div class="flex items-center space-x-3">
-                                        <span class="flex-none w-2 h-2 bg-red-400 rounded-full"></span>
-                                        <h4 class="text-sm font-medium text-gray-900">Banjir di Kec. Percut Sei Tuan</h4>
-                                    </div>
-                                    <span class="text-xs text-gray-500">2 jam yang lalu</span>
+                        <!-- Equipment Stats -->
+                        <div class="bg-white/10 backdrop-blur-lg rounded-xl p-6">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-sm font-medium text-blue-100">Peralatan</p>
+                                    <p class="text-2xl font-bold text-white mt-2">{{ $stats['peralatan']['total'] }}</p>
                                 </div>
-                                <p class="text-sm text-gray-600 mb-4">Ketinggian air mencapai 1 meter, 50 KK terdampak.</p>
-                                <div class="flex items-center justify-between">
-                                    <div class="flex items-center space-x-4">
-                                        <span class="px-2.5 py-0.5 text-xs font-medium text-red-700 bg-red-100 rounded-full">Prioritas Tinggi</span>
-                                        <span class="text-sm text-gray-500">Tim: 12 personel</span>
-                                    </div>
-                                    <button class="text-sm text-bpbd-primary hover:text-bpbd-primary/80">Detail</button>
+                                <div class="p-3 bg-green-400/20 rounded-lg">
+                                    <svg class="w-6 h-6 text-green-100" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                              d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z"/>
+                                    </svg>
                                 </div>
                             </div>
-                            @endfor
+                            <div class="mt-4 flex items-center text-sm text-blue-100">
+                                <span class="text-green-300">{{ $stats['peralatan']['baik'] }} Baik</span>
+                                <span class="mx-2">•</span>
+                                <span class="text-yellow-300">{{ $stats['peralatan']['rusak_ringan'] }} Rusak Ringan</span>
+                                <span class="mx-2">•</span>
+                                <span class="text-red-300">{{ $stats['peralatan']['rusak_berat'] }} Rusak Berat</span>
+                            </div>
+                        </div>
+
+                        <!-- Fund Stats -->
+                        <div class="bg-white/10 backdrop-blur-lg rounded-xl p-6">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-sm font-medium text-blue-100">Dana Tersedia</p>
+                                    <p class="text-2xl font-bold text-white mt-2">
+                                        Rp {{ number_format($stats['dana']['tersedia'], 0, ',', '.') }}
+                                    </p>
+                                </div>
+                                <div class="p-3 bg-yellow-400/20 rounded-lg">
+                                    <svg class="w-6 h-6 text-yellow-100" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                              d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                    </svg>
+                                </div>
+                            </div>
+                            <div class="mt-4 flex items-center text-sm text-blue-100">
+                                <span>{{ $stats['dana']['count'] }} sumber dana</span>
+                                <span class="mx-2">•</span>
+                                <span>{{ number_format($stats['dana']['terpakai'] / max($stats['dana']['total'], 1) * 100, 1) }}% terpakai</span>
+                            </div>
+                        </div>
+
+                        <!-- Disaster Stats -->
+                        <div class="bg-white/10 backdrop-blur-lg rounded-xl p-6">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-sm font-medium text-blue-100">Total Bencana</p>
+                                    <p class="text-2xl font-bold text-white mt-2">{{ $stats['bencana']['total'] }}</p>
+                                </div>
+                                <div class="p-3 bg-red-400/20 rounded-lg">
+                                    <svg class="w-6 h-6 text-red-100" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                              d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                                    </svg>
+                                </div>
+                            </div>
+                            <div class="mt-4 flex items-center text-sm text-blue-100">
+                                <span>{{ $stats['bencana']['bulan_ini'] }} bulan ini</span>
+                                <span class="mx-2">•</span>
+                                <span>{{ $stats['bencana']['tahun_ini'] }} tahun {{ date('Y') }}</span>
+                            </div>
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
 
-                <!-- Right Column -->
-                <div class="space-y-6">
-                    <!-- Priority Analysis -->
-                    <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-200">
-                        <h3 class="font-heading font-semibold text-lg text-gray-900 mb-4">Analisis Prioritas (AHP-TOPSIS)</h3>
-                        <div class="space-y-4">
-                            @foreach(['Banjir', 'Longsor', 'Kebakaran'] as $index => $bencana)
-                            <div class="flex items-center">
-                                <div class="flex-1">
-                                    <div class="flex items-center justify-between mb-1">
-                                        <span class="text-sm font-medium text-gray-700">{{ $bencana }}</span>
-                                        <span class="text-sm text-gray-500">{{ 90 - ($index * 15) }}%</span>
+        <!-- Content Section -->
+        <div class="py-8 px-8">
+            <div class="max-w-7xl mx-auto">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <!-- Latest Analysis -->
+                    <div class="bg-white rounded-xl shadow-sm p-6">
+                        <h3 class="text-lg font-semibold text-gray-900 mb-4">Analisis Terbaru</h3>
+                        @if($stats['perhitungan']['terakhir'])
+                            <div class="space-y-4">
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <p class="text-sm font-medium text-gray-900">
+                                            {{ $stats['perhitungan']['terakhir']->nama_perhitungan }}
+                                        </p>
+                                        <p class="text-sm text-gray-500">
+                                            {{ $stats['perhitungan']['terakhir']->created_at->format('d M Y H:i') }}
+                                        </p>
                                     </div>
-                                    <div class="w-full bg-gray-200 rounded-full h-2">
-                                        <div class="bg-bpbd-primary rounded-full h-2" style="width: {{ 90 - ($index * 15) }}%"></div>
+                                    <a href="{{ route('perhitungan.detail', $stats['perhitungan']['terakhir']->id) }}" 
+                                       class="text-blue-600 hover:text-blue-700 text-sm font-medium">
+                                        Lihat Detail →
+                                    </a>
+                                </div>
+                                @php
+                                    $sortedResults = collect($stats['perhitungan']['terakhir']->hasil_topsis['preferensi'])
+                                        ->sortDesc()
+                                        ->take(5);
+                                @endphp
+                                @foreach($sortedResults as $altId => $nilai)
+                                    <div class="flex items-center">
+                                        <div class="flex-1">
+                                            <div class="flex items-center justify-between mb-1">
+                                                <span class="text-sm font-medium text-gray-700">
+                                                    Alternatif {{ $altId }}
+                                                </span>
+                                                <span class="text-sm text-gray-500">
+                                                    {{ number_format($nilai * 100, 1) }}%
+                                                </span>
+                                            </div>
+                                            <div class="w-full bg-gray-200 rounded-full h-2">
+                                                <div class="bg-blue-600 rounded-full h-2" 
+                                                     style="width: {{ $nilai * 100 }}%">
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
-                                </div>
+                                @endforeach
                             </div>
-                            @endforeach
-                        </div>
-                        <button class="mt-4 w-full px-4 py-2 text-sm text-bpbd-primary bg-bpbd-primary/5 rounded-lg hover:bg-bpbd-primary/10">
-                            Lihat Detail Analisis
-                        </button>
-                    </div>
-
-                    <!-- Resource Allocation -->
-                    <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-200">
-                        <h3 class="font-heading font-semibold text-lg text-gray-900 mb-4">Alokasi Sumber Daya</h3>
-                        <div class="space-y-4">
-                            <div class="p-4 rounded-lg bg-blue-50 border border-blue-100">
-                                <div class="flex items-center justify-between mb-2">
-                                    <span class="text-sm font-medium text-blue-800">Personel</span>
-                                    <span class="text-xs text-blue-600">156/200</span>
-                                </div>
-                                <div class="w-full bg-blue-200 rounded-full h-2">
-                                    <div class="bg-blue-600 rounded-full h-2" style="width: 78%"></div>
-                                </div>
+                        @else
+                            <div class="text-center py-8 text-gray-500">
+                                Belum ada analisis yang dilakukan
                             </div>
-
-                            <div class="p-4 rounded-lg bg-green-50 border border-green-100">
-                                <div class="flex items-center justify-between mb-2">
-                                    <span class="text-sm font-medium text-green-800">Peralatan</span>
-                                    <span class="text-xs text-green-600">85%</span>
-                                </div>
-                                <div class="w-full bg-green-200 rounded-full h-2">
-                                    <div class="bg-green-600 rounded-full h-2" style="width: 85%"></div>
-                                </div>
-                            </div>
-
-                            <div class="p-4 rounded-lg bg-purple-50 border border-purple-100">
-                                <div class="flex items-center justify-between mb-2">
-                                    <span class="text-sm font-medium text-purple-800">Dana</span>
-                                    <span class="text-xs text-purple-600">2.5M/3M</span>
-                                </div>
-                                <div class="w-full bg-purple-200 rounded-full h-2">
-                                    <div class="bg-purple-600 rounded-full h-2" style="width: 83%"></div>
-                                </div>
-                            </div>
-                        </div>
+                        @endif
                     </div>
 
                     <!-- Quick Actions -->
-                    <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-200">
-                        <h3 class="font-heading font-semibold text-lg text-gray-900 mb-4">Aksi Cepat</h3>
-                        <div class="space-y-2">
-                            <button class="w-full px-4 py-2 text-sm text-white bg-bpbd-primary rounded-lg hover:bg-bpbd-primary/90">
-                                Input Kejadian Baru
-                            </button>
-                            <button class="w-full px-4 py-2 text-sm text-bpbd-primary bg-white border border-bpbd-primary rounded-lg hover:bg-bpbd-primary/5">
-                                Deployment Tim
-                            </button>
-                            <button class="w-full px-4 py-2 text-sm text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200">
-                                Generate Laporan
-                            </button>
+                    <div class="bg-white rounded-xl shadow-sm p-6">
+                        <h3 class="text-lg font-semibold text-gray-900 mb-4">Aksi Cepat</h3>
+                        <div class="grid grid-cols-2 gap-4">
+                            <a href="{{ route('personel.create') }}" 
+                               class="flex items-center p-4 bg-blue-50 rounded-lg hover:bg-blue-100">
+                                <div class="p-2 bg-blue-100 rounded-lg mr-4">
+                                    <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                              d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"/>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <p class="text-sm font-medium text-gray-900">Tambah Personel</p>
+                                    <p class="text-xs text-gray-500">Daftarkan anggota baru</p>
+                                </div>
+                            </a>
+
+                            <a href="{{ route('peralatan.create') }}" 
+                               class="flex items-center p-4 bg-green-50 rounded-lg hover:bg-green-100">
+                                <div class="p-2 bg-green-100 rounded-lg mr-4">
+                                    <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                              d="M17 14v6m-3-3h6M6 10h2a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v2a2 2 0 002 2zm10 0h2a2 2 0 002-2V6a2 2 0 00-2-2h-2a2 2 0 00-2 2v2a2 2 0 002 2zM6 20h2a2 2 0 002-2v-2a2 2 0 00-2-2H6a2 2 0 00-2 2v2a2 2 0 002 2z"/>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <p class="text-sm font-medium text-gray-900">Tambah Peralatan</p>
+                                    <p class="text-xs text-gray-500">Catat peralatan baru</p>
+                                </div>
+                            </a>
+
+                            <a href="{{ route('dana.create') }}" 
+                               class="flex items-center p-4 bg-yellow-50 rounded-lg hover:bg-yellow-100">
+                                <div class="p-2 bg-yellow-100 rounded-lg mr-4">
+                                    <svg class="w-6 h-6 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                              d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"/>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <p class="text-sm font-medium text-gray-900">Tambah Dana</p>
+                                    <p class="text-xs text-gray-500">Catat sumber dana baru</p>
+                                </div>
+                            </a>
+
+                            <a href="{{ route('bencana.create') }}" 
+                               class="flex items-center p-4 bg-red-50 rounded-lg hover:bg-red-100">
+                                <div class="p-2 bg-red-100 rounded-lg mr-4">
+                                    <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                              d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <p class="text-sm font-medium text-gray-900">Catat Bencana</p>
+                                    <p class="text-xs text-gray-500">Laporkan kejadian bencana</p>
+                                </div>
+                            </a>
                         </div>
                     </div>
                 </div>
             </div>
-        </main>
+        </div>
     </div>
-
-    <!-- Scripts -->
-    <script src="https://cdn.tailwindcss.com"></script>
 </body>
 </html>
