@@ -19,6 +19,7 @@
     <!-- Additional CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <script>
         tailwind.config = {
@@ -379,6 +380,30 @@
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
     <script>
+@if(session('loginError'))
+    Swal.fire({
+        icon: '{{ session('loginError.type') }}',
+        title: '{{ session('loginError.title') }}',
+        text: '{{ session('loginError.message') }}',
+        showConfirmButton: true,
+        confirmButtonColor: '#E63946',
+        customClass: {
+            popup: 'rounded-2xl',
+            confirmButton: 'rounded-xl px-6 py-2.5 font-display font-semibold',
+        },
+        showClass: {
+            popup: 'animate__animated animate__fadeInDown animate__faster'
+        },
+        hideClass: {
+            popup: 'animate__animated animate__fadeOutUp animate__faster'
+        }
+    }).then((result) => {
+        if (result.isConfirmed && '{{ session('loginError.type') }}' === 'error' && '{{ session('loginError.title') }}' === 'Akun Tidak Ditemukan') {
+            switchTab('register');
+        }
+    });
+@endif
+
         // Tab switching functionality
         function switchTab(tab) {
             const loginForm = document.getElementById('login-form');

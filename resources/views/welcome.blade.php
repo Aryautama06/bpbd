@@ -190,7 +190,7 @@
     </head>
     <body class="antialiased font-sans">
         <!-- Navigation -->
-        <nav class="fixed w-full z-50 bg-white/80 backdrop-blur-md border-b border-gray-100">
+        <nav class="fixed w-full z-50 bg-white/95 backdrop-blur-md border-b border-gray-100">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="flex justify-between h-16">
                     <div class="flex">
@@ -282,144 +282,127 @@
 
         <!-- Hero Section -->
         <div class="relative min-h-screen flex items-center pt-16 overflow-hidden">
-            <!-- Background Video/Image Layer -->
-            <div class="absolute inset-0 z-0">
-                <div class="absolute inset-0 bg-gradient-to-r from-bpbd-primary/90 to-bpbd-secondary/90 mix-blend-multiply z-10"></div>
-                <video class="w-full h-full object-cover" autoplay loop muted playsinline>
-                    <source src="{{ asset('videos/emergency-response.mp4') }}" type="video/mp4">
-                </video>
-                <!-- Fallback image if video doesn't load -->
-                <img src="{{ asset('images/hero-bg.jpg') }}" alt="Emergency Response" class="w-full h-full object-cover">
-            </div>
+            <!-- Background gradient -->
+            <div class="absolute inset-0 bg-gradient-to-br from-bpbd-secondary via-bpbd-accent to-bpbd-primary opacity-90">
+                <!-- Background Video/Image Layer -->
+                <div class="absolute inset-0 z-0">
+                    <div class="absolute inset-0 bg-gradient-to-r from-bpbd-primary/90 to-bpbd-secondary/90 mix-blend-multiply z-10"></div>
+                    <video class="w-full h-full object-cover" autoplay loop muted playsinline>
+                        <source src="{{ asset('videos/emergency-response.mp4') }}" type="video/mp4">
+                    </video>
+                    <!-- Fallback image if video doesn't load -->
+                    <img src="{{ asset('images/hero-bg.jpg') }}" alt="Emergency Response" class="w-full h-full object-cover">
+                </div>
 
-            <!-- Animated Particles -->
-            <div class="absolute inset-0 z-10">
-                <div id="particles-js"></div>
-            </div>
+                <!-- Animated Particles -->
+                <div class="absolute inset-0 z-10">
+                    <div id="particles-js"></div>
+                </div>
 
-            <!-- Content Layer -->
-            <div class="relative z-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-                    <!-- Left Column -->
-                    <div data-aos="fade-right" class="text-white">
-                        <div class="inline-flex items-center px-4 py-2 rounded-full border border-white/30 backdrop-blur-sm mb-6">
-                            <span class="animate-ping w-2 h-2 bg-red-500 rounded-full mr-2"></span>
-                            <span class="text-sm">Siaga 24/7 Penanganan Bencana</span>
-                        </div>
-                        
-                        <h1 class="text-4xl lg:text-6xl font-bold leading-tight mb-6">
-                            Sistem Pendukung Keputusan
-                            <span class="block mt-2 text-transparent bg-clip-text bg-gradient-to-r from-red-300 to-red-100">
-                                Multi-Bencana
-                            </span>
-                        </h1>
-                        
-                        <p class="text-xl text-gray-100 mb-8 leading-relaxed">
-                            Optimalisasi alokasi sumber daya dalam penanganan bencana untuk respon yang lebih cepat dan efektif dengan dukungan teknologi terdepan.
-                        </p>
-
-                        <div class="flex flex-wrap gap-4">
-                            <a href="#features" 
-                               class="group relative inline-flex items-center px-8 py-3 overflow-hidden rounded-lg bg-white text-bpbd-primary font-semibold hover:bg-white/90 transition-all duration-300">
-                                <span class="absolute right-0 w-8 h-32 -mt-12 transition-all duration-1000 transform translate-x-12 bg-white opacity-10 rotate-12 group-hover:-translate-x-40 ease"></span>
-                                <span class="relative flex items-center">
-                                    Pelajari Lebih Lanjut
-                                    <svg class="ml-2 w-5 h-5 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
-                                    </svg>
-                                </span>
-                            </a>
+                <!-- Content Layer -->
+                <div class="relative z-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                        <!-- Left Column -->
+                        <div data-aos="fade-right" class="text-white">
+                            <div class="inline-flex items-center px-4 py-2 rounded-full border border-white/30 backdrop-blur-sm mb-6">
+                                <span class="animate-ping w-2 h-2 bg-red-500 rounded-full mr-2"></span>
+                                <span class="text-sm">Siaga 24/7 Penanganan Bencana</span>
+                            </div>
                             
-                            <a href="#contact" 
-                               class="group relative inline-flex items-center px-8 py-3 overflow-hidden rounded-lg border-2 border-white text-white hover:bg-white/10 transition-all duration-300">
-                                <span class="relative flex items-center">
-                                    Hubungi Kami
-                                    <svg class="ml-2 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
-                                    </svg>
+                            <h1 class="text-4xl lg:text-6xl font-bold leading-tight mb-6">
+                                Sistem Pendukung Keputusan
+                                <span class="block mt-2 text-transparent bg-clip-text bg-gradient-to-r from-red-300 to-red-100">
+                                    Multi-Bencana
                                 </span>
-                            </a>
-                        </div>
-
-                        <!-- Emergency Stats -->
-                        <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-12">
-                            <div class="text-center p-4 rounded-lg backdrop-blur-sm bg-white/10">
-                                <div class="text-2xl font-bold">24/7</div>
-                                <div class="text-sm text-gray-200">Siaga</div>
-                            </div>
-                            <div class="text-center p-4 rounded-lg backdrop-blur-sm bg-white/10">
-                                <div class="text-2xl font-bold">500+</div>
-                                <div class="text-sm text-gray-200">Tim Siap</div>
-                            </div>
-                            <div class="text-center p-4 rounded-lg backdrop-blur-sm bg-white/10">
-                                <div class="text-2xl font-bold">15+</div>
-                                <div class="text-sm text-gray-200">Pos Siaga</div>
-                            </div>
-                            <div class="text-center p-4 rounded-lg backdrop-blur-sm bg-white/10">
-                                <div class="text-2xl font-bold">100%</div>
-                                <div class="text-sm text-gray-200">Komitmen</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Right Column - Emergency Status -->
-                    <div data-aos="fade-left" class="hidden lg:block">
-                        <div class="relative">
-                            <!-- Decorative Elements -->
-                            <div class="absolute -top-4 -right-4 w-72 h-72 bg-gradient-to-r from-red-500/30 to-blue-500/30 rounded-full blur-3xl"></div>
-                            <div class="absolute -bottom-4 -left-4 w-72 h-72 bg-gradient-to-r from-blue-500/30 to-red-500/30 rounded-full blur-3xl"></div>
+                            </h1>
                             
-                            <!-- Card Content -->
-                            <div class="relative rounded-2xl backdrop-blur-sm bg-white/10 p-8 border border-white/20">
-                                <div class="flex items-center justify-between mb-6">
-                                    <h3 class="text-xl font-semibold text-white">Status Siaga</h3>
-                                    <span class="px-3 py-1 rounded-full bg-red-500/20 text-red-100 text-sm">Live Updates</span>
-                                </div>
+                            <p class="text-xl text-gray-100 mb-8 leading-relaxed">
+                                Optimalisasi alokasi sumber daya dalam penanganan bencana untuk respon yang lebih cepat dan efektif dengan dukungan teknologi terdepan.
+                            </p>
 
-                                <!-- Emergency Status List -->
-                                <div class="space-y-4">
-                                    <div class="flex items-center p-4 rounded-lg bg-white/5 border border-white/10">
-                                        <div class="flex-shrink-0 w-12 h-12 rounded-lg bg-red-500/20 flex items-center justify-center mr-4">
-                                            <svg class="w-6 h-6 text-red-100" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
-                                            </svg>
-                                        </div>
-                                        <div class="flex-1">
-                                            <h4 class="text-sm font-medium text-white">Peringatan Dini</h4>
-                                            <p class="text-xs text-gray-300">Potensi banjir di wilayah pesisir</p>
-                                        </div>
-                                        <div class="text-xs text-gray-400">5m ago</div>
+                            <div class="flex flex-wrap gap-4">
+                                <a href="#features" 
+                                   class="group relative inline-flex items-center px-8 py-3 overflow-hidden rounded-lg bg-white text-bpbd-primary font-semibold hover:bg-white/90 transition-all duration-300">
+                                    <span class="absolute right-0 w-8 h-32 -mt-12 transition-all duration-1000 transform translate-x-12 bg-white opacity-10 rotate-12 group-hover:-translate-x-40 ease"></span>
+                                    <span class="relative flex items-center">
+                                        Pelajari Lebih Lanjut
+                                        <svg class="ml-2 w-5 h-5 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+                                        </svg>
+                                    </span>
+                                </a>
+                                
+                                <a href="#contact" 
+                                   class="group relative inline-flex items-center px-8 py-3 overflow-hidden rounded-lg border-2 border-white text-white hover:bg-white/10 transition-all duration-300">
+                                    <span class="relative flex items-center">
+                                        Hubungi Kami
+                                        <svg class="ml-2 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+                                        </svg>
+                                    </span>
+                                </a>
+                            </div>
+                        </div>
+
+                        <!-- Right Column - Emergency Status -->
+                        <div data-aos="fade-left" class="hidden lg:block">
+                            <div class="relative">
+                                <!-- Decorative Elements -->
+                                <div class="absolute -top-4 -right-4 w-72 h-72 bg-gradient-to-r from-red-500/30 to-blue-500/30 rounded-full blur-3xl"></div>
+                                <div class="absolute -bottom-4 -left-4 w-72 h-72 bg-gradient-to-r from-blue-500/30 to-red-500/30 rounded-full blur-3xl"></div>
+                                
+                                <!-- Card Content -->
+                                <div class="relative rounded-2xl backdrop-blur-sm bg-white/10 p-8 border border-white/20">
+                                    <div class="flex items-center justify-between mb-6">
+                                        <h3 class="text-xl font-semibold text-white">Status Siaga</h3>
+                                        <span class="px-3 py-1 rounded-full bg-red-500/20 text-red-100 text-sm">Live Updates</span>
                                     </div>
 
-                                    <div class="flex items-center p-4 rounded-lg bg-white/5 border border-white/10">
-                                        <div class="flex-shrink-0 w-12 h-12 rounded-lg bg-yellow-500/20 flex items-center justify-center mr-4">
-                                            <svg class="w-6 h-6 text-yellow-100" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
-                                            </svg>
+                                    <!-- Emergency Status List -->
+                                    <div class="space-y-4">
+                                        <div class="flex items-center p-4 rounded-lg bg-white/5 border border-white/10">
+                                            <div class="flex-shrink-0 w-12 h-12 rounded-lg bg-red-500/20 flex items-center justify-center mr-4">
+                                                <svg class="w-6 h-6 text-red-100" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                                                </svg>
+                                            </div>
+                                            <div class="flex-1">
+                                                <h4 class="text-sm font-medium text-white">Peringatan Dini</h4>
+                                                <p class="text-xs text-gray-300">Potensi banjir di wilayah pesisir</p>
+                                            </div>
+                                            <div class="text-xs text-gray-400">5m ago</div>
                                         </div>
-                                        <div class="flex-1">
-                                            <h4 class="text-sm font-medium text-white">Status Siaga</h4>
-                                            <p class="text-xs text-gray-300">Tim tanggap darurat dikerahkan</p>
-                                        </div>
-                                        <div class="text-xs text-gray-400">15m ago</div>
-                                    </div>
-                                </div>
 
-                                <!-- Quick Actions -->
-                                <div class="grid grid-cols-2 gap-4 mt-6">
-                                    <button class="p-4 rounded-lg bg-white/5 border border-white/10 hover:bg-white/10 transition-colors">
-                                        <svg class="w-6 h-6 text-white mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
-                                        </svg>
-                                        Notifikasi
-                                    </button>
-                                    <button class="p-4 rounded-lg bg-white/5 border border-white/10 hover:bg-white/10 transition-colors">
-                                        <svg class="w-6 h-6 text-white mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
-                                        </svg>
-                                        Lokasi
-                                    </button>
+                                        <div class="flex items-center p-4 rounded-lg bg-white/5 border border-white/10">
+                                            <div class="flex-shrink-0 w-12 h-12 rounded-lg bg-yellow-500/20 flex items-center justify-center mr-4">
+                                                <svg class="w-6 h-6 text-yellow-100" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                                                </svg>
+                                            </div>
+                                            <div class="flex-1">
+                                                <h4 class="text-sm font-medium text-white">Status Siaga</h4>
+                                                <p class="text-xs text-gray-300">Tim tanggap darurat dikerahkan</p>
+                                            </div>
+                                            <div class="text-xs text-gray-400">15m ago</div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Quick Actions -->
+                                    <div class="grid grid-cols-2 gap-4 mt-6">
+                                        <button class="p-4 rounded-lg bg-white/5 border border-white/10 hover:bg-white/10 transition-colors">
+                                            <svg class="w-6 h-6 text-white mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
+                                            </svg>
+                                            Notifikasi
+                                        </button>
+                                        <button class="p-4 rounded-lg bg-white/5 border border-white/10 hover:bg-white/10 transition-colors">
+                                            <svg class="w-6 h-6 text-white mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+                                            </svg>
+                                            Lokasi
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -429,7 +412,7 @@
         </div>
 
         <!-- Features Section -->
-        <section id="features" class="py-24 bg-gray-50">
+        <section id="features" class="py-24 bg-bpbd-light">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="text-center mb-16" data-aos="fade-up">
                     <h2 class="text-3xl font-bold text-gray-900 mb-4">Fitur Utama</h2>
@@ -474,7 +457,7 @@
         </section>
 
         <!-- News Section Enhancement -->
-        <section class="py-24">
+        <section class="py-24 bg-white">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="text-center mb-16" data-aos="fade-up">
                     <h2 class="text-3xl font-bold text-gray-900 mb-4">Berita Terkini</h2>
@@ -573,159 +556,159 @@
 
         <!-- Statistics Section -->
         <section class="relative py-24 overflow-hidden">
-    <div class="absolute inset-0 bg-gradient-to-br from-bpbd-primary/90 to-bpbd-secondary/90">
-        <div class="absolute inset-0 bg-[url('/images/pattern-grid.png')] opacity-10"></div>
-    </div>
-    
-    <div class="absolute inset-0" id="stats-particles"></div>
+            <div class="absolute inset-0 bg-gradient-to-br from-bpbd-primary via-bpbd-accent to-bpbd-secondary">
+                <div class="absolute inset-0 bg-[url('/images/pattern-grid.png')] opacity-10"></div>
+            </div>
+            
+            <div class="absolute inset-0" id="stats-particles"></div>
 
-    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="text-center mb-16" data-aos="fade-up">
-            <h2 class="text-3xl font-bold text-white mb-4">Data Statistik BPBD</h2>
-            <div class="w-24 h-1 bg-gradient-to-r from-white/40 to-white/10 mx-auto rounded-full"></div>
-        </div>
+            <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-16" data-aos="fade-up">
+                    <h2 class="text-3xl font-bold text-white mb-4">Data Statistik BPBD</h2>
+                    <div class="w-24 h-1 bg-gradient-to-r from-white/40 to-white/10 mx-auto rounded-full"></div>
+                </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
-            <!-- Bencana Stats -->
-            <div class="relative group" data-aos="fade-up" data-aos-delay="100">
-                <div class="absolute inset-0 bg-white/5 rounded-2xl transform group-hover:scale-105 transition-transform duration-500"></div>
-                <div class="relative p-8 text-center">
-                    <div class="w-16 h-16 bg-white/10 rounded-xl flex items-center justify-center mx-auto mb-6">
-                        <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
-                        </svg>
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                    <!-- Bencana Stats -->
+                    <div class="relative group">
+                        <div class="absolute inset-0 bg-gradient-to-br from-white/10 to-white/5 rounded-2xl transform group-hover:scale-105 transition-all duration-500"></div>
+                        <div class="relative p-8 text-center">
+                            <div class="w-16 h-16 bg-white/10 rounded-xl flex items-center justify-center mx-auto mb-6">
+                                <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                                </svg>
+                            </div>
+                            <div class="text-4xl font-bold text-white mb-2">
+                                {{ $stats['bencana']['total'] ?? 0 }}
+                            </div>
+                            <div class="text-lg text-white/80">Total Bencana</div>
+                            <div class="text-sm text-white/60 mt-2">
+                                {{ $stats['bencana']['bulan_ini'] ?? 0 }} bulan ini
+                            </div>
+                        </div>
                     </div>
-                    <div class="text-4xl font-bold text-white mb-2">
-                        {{ $stats['bencana']['total'] ?? 0 }}
+
+                    <!-- Personel Stats -->
+                    <div class="relative group">
+                        <div class="absolute inset-0 bg-gradient-to-br from-white/10 to-white/5 rounded-2xl transform group-hover:scale-105 transition-all duration-500"></div>
+                        <div class="relative p-8 text-center">
+                            <div class="w-16 h-16 bg-white/10 rounded-xl flex items-center justify-center mx-auto mb-6">
+                                <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+                                </svg>
+                            </div>
+                            <div class="text-4xl font-bold text-white mb-2">
+                                {{ $stats['personel']['total'] ?? 0 }}
+                            </div>
+                            <div class="text-lg text-white/80">Total Personel</div>
+                            <div class="text-sm text-white/60 mt-2">
+                                {{ $stats['personel']['pns'] ?? 0 }} PNS • 
+                                {{ $stats['personel']['kontrak'] ?? 0 }} Kontrak • 
+                                {{ $stats['personel']['sukarela'] ?? 0 }} Sukarela
+                            </div>
+                        </div>
                     </div>
-                    <div class="text-lg text-white/80">Total Bencana</div>
-                    <div class="text-sm text-white/60 mt-2">
-                        {{ $stats['bencana']['bulan_ini'] ?? 0 }} bulan ini
+
+                    <!-- Peralatan Stats -->
+                    <div class="relative group">
+                        <div class="absolute inset-0 bg-gradient-to-br from-white/10 to-white/5 rounded-2xl transform group-hover:scale-105 transition-all duration-500"></div>
+                        <div class="relative p-8 text-center">
+                            <div class="w-16 h-16 bg-white/10 rounded-xl flex items-center justify-center mx-auto mb-6">
+                                <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z"/>
+                                </svg>
+                            </div>
+                            <div class="text-4xl font-bold text-white mb-2">
+                                {{ $stats['peralatan']['total'] ?? 0 }}
+                            </div>
+                            <div class="text-lg text-white/80">Total Peralatan</div>
+                            <div class="text-sm text-white/60 mt-2">
+                                {{ $stats['peralatan']['baik'] ?? 0 }} Baik • 
+                                {{ $stats['peralatan']['rusak_ringan'] ?? 0 }} Rusak Ringan
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Dana Stats -->
+                    <div class="relative group">
+                        <div class="absolute inset-0 bg-gradient-to-br from-white/10 to-white/5 rounded-2xl transform group-hover:scale-105 transition-all duration-500"></div>
+                        <div class="relative p-8 text-center">
+                            <div class="w-16 h-16 bg-white/10 rounded-xl flex items-center justify-center mx-auto mb-6">
+                                <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                </svg>
+                            </div>
+                            <div class="text-4xl font-bold text-white mb-2">
+                                Rp {{ number_format($stats['dana']['tersedia'] ?? 0, 0, ',', '.') }}
+                            </div>
+                            <div class="text-lg text-white/80">Dana Tersedia</div>
+                            <div class="text-sm text-white/60 mt-2">
+                                {{ number_format(($stats['dana']['terpakai'] ?? 0) / max($stats['dana']['total'] ?? 1, 1) * 100, 1) }}% terpakai
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
+        </section>
 
-            <!-- Personel Stats -->
-            <div class="relative group" data-aos="fade-up" data-aos-delay="200">
-                <div class="absolute inset-0 bg-white/5 rounded-2xl transform group-hover:scale-105 transition-transform duration-500"></div>
-                <div class="relative p-8 text-center">
-                    <div class="w-16 h-16 bg-white/10 rounded-xl flex items-center justify-center mx-auto mb-6">
-                        <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
-                        </svg>
-                    </div>
-                    <div class="text-4xl font-bold text-white mb-2">
-                        {{ $stats['personel']['total'] ?? 0 }}
-                    </div>
-                    <div class="text-lg text-white/80">Total Personel</div>
-                    <div class="text-sm text-white/60 mt-2">
-                        {{ $stats['personel']['pns'] ?? 0 }} PNS • 
-                        {{ $stats['personel']['kontrak'] ?? 0 }} Kontrak • 
-                        {{ $stats['personel']['sukarela'] ?? 0 }} Sukarela
-                    </div>
-                </div>
-            </div>
-
-            <!-- Peralatan Stats -->
-            <div class="relative group" data-aos="fade-up" data-aos-delay="300">
-                <div class="absolute inset-0 bg-white/5 rounded-2xl transform group-hover:scale-105 transition-transform duration-500"></div>
-                <div class="relative p-8 text-center">
-                    <div class="w-16 h-16 bg-white/10 rounded-xl flex items-center justify-center mx-auto mb-6">
-                        <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z"/>
-                        </svg>
-                    </div>
-                    <div class="text-4xl font-bold text-white mb-2">
-                        {{ $stats['peralatan']['total'] ?? 0 }}
-                    </div>
-                    <div class="text-lg text-white/80">Total Peralatan</div>
-                    <div class="text-sm text-white/60 mt-2">
-                        {{ $stats['peralatan']['baik'] ?? 0 }} Baik • 
-                        {{ $stats['peralatan']['rusak_ringan'] ?? 0 }} Rusak Ringan
-                    </div>
-                </div>
-            </div>
-
-            <!-- Dana Stats -->
-            <div class="relative group" data-aos="fade-up" data-aos-delay="400">
-                <div class="absolute inset-0 bg-white/5 rounded-2xl transform group-hover:scale-105 transition-transform duration-500"></div>
-                <div class="relative p-8 text-center">
-                    <div class="w-16 h-16 bg-white/10 rounded-xl flex items-center justify-center mx-auto mb-6">
-                        <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                        </svg>
-                    </div>
-                    <div class="text-4xl font-bold text-white mb-2">
-                        Rp {{ number_format($stats['dana']['tersedia'] ?? 0, 0, ',', '.') }}
-                    </div>
-                    <div class="text-lg text-white/80">Dana Tersedia</div>
-                    <div class="text-sm text-white/60 mt-2">
-                        {{ number_format(($stats['dana']['terpakai'] ?? 0) / max($stats['dana']['total'] ?? 1, 1) * 100, 1) }}% terpakai
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- Add this script before </body> -->
-<script>
-    // Counter animation function
-    function animateValue(element, start, end, duration) {
-        let startTimestamp = null;
-        const step = (timestamp) => {
-            if (!startTimestamp) startTimestamp = timestamp;
-            const progress = Math.min((timestamp - startTimestamp) / duration, 1);
-            element.textContent = Math.floor(progress * (end - start) + start);
-            if (progress < 1) {
+        <!-- Add this script before </body> -->
+        <script>
+            // Counter animation function
+            function animateValue(element, start, end, duration) {
+                let startTimestamp = null;
+                const step = (timestamp) => {
+                    if (!startTimestamp) startTimestamp = timestamp;
+                    const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+                    element.textContent = Math.floor(progress * (end - start) + start);
+                    if (progress < 1) {
+                        window.requestAnimationFrame(step);
+                    }
+                };
                 window.requestAnimationFrame(step);
             }
-        };
-        window.requestAnimationFrame(step);
-    }
 
-    // Initialize counter animations when section is in view
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.querySelectorAll('[data-count]').forEach(counter => {
-                    animateValue(counter, 0, parseInt(counter.dataset.count), 2000);
+            // Initialize counter animations when section is in view
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.querySelectorAll('[data-count]').forEach(counter => {
+                            animateValue(counter, 0, parseInt(counter.dataset.count), 2000);
+                        });
+                        observer.unobserve(entry.target);
+                    }
                 });
-                observer.unobserve(entry.target);
-            }
-        });
-    }, { threshold: 0.5 });
+            }, { threshold: 0.5 });
 
-    // Observe statistics section
-    observer.observe(document.querySelector('.statistics-section'));
+            // Observe statistics section
+            observer.observe(document.querySelector('.statistics-section'));
 
-    // Initialize particles for statistics section
-    particlesJS('stats-particles', {
-        particles: {
-            number: { value: 40, density: { enable: true, value_area: 800 } },
-            color: { value: '#ffffff' },
-            shape: { type: 'circle' },
-            opacity: { value: 0.2, random: true },
-            size: { value: 3, random: true },
-            line_linked: { enable: true, distance: 150, color: '#ffffff', opacity: 0.2, width: 1 },
-            move: { enable: true, speed: 2, direction: 'none', random: true, straight: false, out_mode: 'out', bounce: false }
-        },
-        interactivity: {
-            detect_on: 'canvas',
-            events: {
-                onhover: { enable: true, mode: 'bubble' },
-                resize: true
-            },
-            modes: {
-                bubble: { distance: 200, size: 4, duration: 2, opacity: 0.8, speed: 3 }
-            }
-        },
-        retina_detect: true
-    });
-</script>
+            // Initialize particles for statistics section
+            particlesJS('stats-particles', {
+                particles: {
+                    number: { value: 40, density: { enable: true, value_area: 800 } },
+                    color: { value: '#ffffff' },
+                    shape: { type: 'circle' },
+                    opacity: { value: 0.2, random: true },
+                    size: { value: 3, random: true },
+                    line_linked: { enable: true, distance: 150, color: '#ffffff', opacity: 0.2, width: 1 },
+                    move: { enable: true, speed: 2, direction: 'none', random: true, straight: false, out_mode: 'out', bounce: false }
+                },
+                interactivity: {
+                    detect_on: 'canvas',
+                    events: {
+                        onhover: { enable: true, mode: 'bubble' },
+                        resize: true
+                    },
+                    modes: {
+                        bubble: { distance: 200, size: 4, duration: 2, opacity: 0.8, speed: 3 }
+                    }
+                },
+                retina_detect: true
+            });
+        </script>
 
         <!-- Emergency Contact Section -->
-        <section class="py-16 bg-red-50">
+        <section class="py-16 bg-gradient-to-br from-bpbd-light to-white">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="bg-white rounded-2xl shadow-xl overflow-hidden">
                     <div class="grid grid-cols-1 md:grid-cols-2">
@@ -761,7 +744,7 @@
                             </div>
                         </div>
                         
-                        <div class="p-8 md:p-12 bg-red-600">
+                        <div class="p-8 md:p-12 bg-gradient-to-br from-bpbd-secondary to-bpbd-accent">
                             <form class="space-y-6">
                                 <div>
                                     <label class="block text-white text-sm font-medium mb-2">Nama Lengkap</label>
@@ -786,7 +769,7 @@
         </section>
 
         <!-- Footer -->
-        <footer class="bg-gray-900 text-white py-12">
+        <footer class="bg-bpbd-dark text-white py-12">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
                     <div>
