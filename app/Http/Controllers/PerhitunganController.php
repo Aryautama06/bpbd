@@ -7,6 +7,7 @@ use App\Models\Kriteria;
 use App\Models\Alternatif;     
 use App\Models\NilaiAlternatif;
 use App\Models\PerbandinganKriteria;
+use App\Models\HasilPerhitungan; // Add this import
 use Illuminate\Http\Request;
 
 class PerhitunganController extends Controller
@@ -671,6 +672,50 @@ class PerhitunganController extends Controller
         }
         
         return $peringkat;
+    }
+
+    public function simpanHasil(Request $request)
+    {
+        try {
+            // Validate request
+            $request->validate([
+                'nama_perhitungan' => 'required|string|max:255',
+                'deskripsi' => 'nullable|string'
+            ]);
+
+            // Check if both AHP and TOPSIS results exist
+            if (!session('hasilAHP') || !session('hasilTOPSIS')) {
+                return back()->with('error', 'Data perhitungan tidak lengkap');
+            }
+
+            // Generate kode perhitungan
+            $kode = 'SPK-' . date('Ymd') . '-' . rand(1000, 9999);
+
+            // Save hasil perhitungan
+            $hasil = HasilPerhitungan::create([
+                'kode_perhitungan' => $kode,
+                'nama_perhitungan' => $request->nama_perhitungan,
+                'deskripsi' => $request->deskripsi,
+                'bobot_ahp' => session('hasilAHP'),
+                'hasil_topsis' => session('hasilTOPSIS')
+            ]);
+
+            // Clear session after successful save
+            session()->forget(['hasilAHP', 'hasilTOPSIS']);
+
+            return redirect()
+                ->route('perhitungan.riwayat')
+                ->with('success', 'Hasil perhitungan berhasil disimpan');
+
+        } catch (\Exception $e) {
+            return back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
+        }
+    }
+
+    public function riwayat()
+    {
+        $riwayat = HasilPerhitungan::orderBy('created_at', 'desc')->get();
+        return view('perhitungan.riwayat', compact('riwayat'));
     }
 }
 

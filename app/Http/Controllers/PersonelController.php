@@ -10,8 +10,16 @@ class PersonelController extends Controller
 {
     public function index()
     {
-        $personels = Personel::latest()->get();
-        return view('personel.index', compact('personels'));
+        $personel = Personel::selectRaw('
+            COUNT(*) as total,
+            SUM(CASE WHEN status = "Aktif" THEN 1 ELSE 0 END) as aktif,
+            SUM(CASE WHEN status = "Non-Aktif" THEN 1 ELSE 0 END) as non_aktif,
+            SUM(CASE WHEN status = "Bertugas" THEN 1 ELSE 0 END) as bertugas
+        ')->first();
+        
+        $list_personel = Personel::orderBy('nama')->get();
+
+        return view('personel.index', compact('personel', 'list_personel'));
     }
 
     public function create()

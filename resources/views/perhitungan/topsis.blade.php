@@ -397,6 +397,80 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- Save Result Button -->
+                <div class="mt-8 flex justify-end">
+                    <button type="button" 
+                            onclick="showSaveModal()"
+                            class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"/>
+                        </svg>
+                        Simpan Hasil Perhitungan
+                    </button>
+                </div>
+
+                <!-- Save Modal -->
+                <div id="saveModal" class="fixed inset-0 z-50 hidden overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+                    <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+                        <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" aria-hidden="true"></div>
+                        <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+                        <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+                            <form action="{{ route('perhitungan.simpan-hasil') }}" method="POST">
+                                @csrf
+                                <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                                    <div class="sm:flex sm:items-start">
+                                        <div class="mt-3 text-center sm:mt-0 sm:text-left w-full">
+                                            <h3 class="text-lg leading-6 font-medium text-gray-900" id="modal-title">
+                                                Simpan Hasil Perhitungan
+                                            </h3>
+                                            <div class="mt-4 space-y-4">
+                                                <div>
+                                                    <label class="block text-sm font-medium text-gray-700">
+                                                        Nama Perhitungan
+                                                    </label>
+                                                    <input type="text" 
+                                                           name="nama_perhitungan" 
+                                                           class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                                                           required>
+                                                </div>
+                                                <div>
+                                                    <label class="block text-sm font-medium text-gray-700">
+                                                        Deskripsi (Opsional)
+                                                    </label>
+                                                    <textarea name="deskripsi" 
+                                                              rows="3" 
+                                                              class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"></textarea>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+                                    <button type="submit" 
+                                            class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm">
+                                        Simpan
+                                    </button>
+                                    <button type="button" 
+                                            onclick="hideSaveModal()"
+                                            class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
+                                        Batal
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <script>
+                function showSaveModal() {
+                    document.getElementById('saveModal').classList.remove('hidden');
+                }
+
+                function hideSaveModal() {
+                    document.getElementById('saveModal').classList.add('hidden');
+                }
+                </script>
                 @endif
             </div>
         </div>

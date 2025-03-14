@@ -110,6 +110,9 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/simpan-nilai', [PerhitunganController::class, 'simpanNilai'])->name('simpan-nilai');
         Route::post('/simpan-perbandingan', [PerhitunganController::class, 'simpanPerbandingan'])->name('simpan-perbandingan');
         Route::post('/hitung-topsis', [PerhitunganController::class, 'hitungTopsis'])->name('hitung-topsis');
+        Route::post('/simpan-hasil', [PerhitunganController::class, 'simpanHasil'])->name('simpan-hasil');
+        Route::get('/riwayat', [PerhitunganController::class, 'riwayat'])->name('riwayat');
+        Route::get('/detail/{hasil}', [PerhitunganController::class, 'detail'])->name('detail');
     });
 
     Route::get('/analisis', [AnalisisController::class, 'index'])->name('analisis.index');
