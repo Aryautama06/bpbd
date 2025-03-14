@@ -7,7 +7,7 @@ use App\Models\Kriteria;
 use App\Models\Alternatif;     
 use App\Models\NilaiAlternatif;
 use App\Models\PerbandinganKriteria;
-use App\Models\HasilPerhitungan; // Add this import
+use App\Models\HasilPerhitungan; 
 use Illuminate\Http\Request;
 
 class PerhitunganController extends Controller
@@ -714,8 +714,16 @@ class PerhitunganController extends Controller
 
     public function riwayat()
     {
-        $riwayat = HasilPerhitungan::orderBy('created_at', 'desc')->get();
+        $riwayat = HasilPerhitungan::orderBy('created_at', 'desc')->paginate(10);
         return view('perhitungan.riwayat', compact('riwayat'));
+    }
+
+    public function detail(HasilPerhitungan $hasil)
+    {
+        $kriterias = Kriteria::orderBy('kode_kriteria')->get();
+        $alternatifs = Alternatif::orderBy('kode_alternatif')->get();
+
+        return view('perhitungan.detail', compact('hasil', 'kriterias', 'alternatifs'));
     }
 }
 

@@ -42,18 +42,16 @@
             </div>
             <div class="relative py-12 px-8">
                 <div class="max-w-7xl mx-auto">
-                    <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-8">
-                        <div class="flex items-center gap-6">
-                            <div class="p-4 bg-white/10 backdrop-blur-lg rounded-2xl">
-                                <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
-                                          d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                                </svg>
-                            </div>
-                            <div>
-                                <h1 class="text-3xl font-bold text-white">Riwayat Perhitungan</h1>
-                                <p class="text-blue-100 mt-1">Daftar hasil perhitungan yang telah disimpan</p>
-                            </div>
+                    <div class="flex items-center gap-6">
+                        <div class="p-4 bg-white/10 backdrop-blur-lg rounded-2xl">
+                            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                      d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <h1 class="text-3xl font-bold text-white">Riwayat Perhitungan</h1>
+                            <p class="text-blue-100 mt-1">Daftar hasil perhitungan yang telah disimpan</p>
                         </div>
                     </div>
                 </div>
@@ -90,8 +88,13 @@
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
                                           d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"/>
                                 </svg>
-                                <h3 class="mt-2 text-sm font-medium text-gray-900">Belum ada riwayat</h3>
+                                <h3 class="mt-2 text-sm font-medium text-gray-900">Belum ada riwayat perhitungan</h3>
                                 <p class="mt-1 text-sm text-gray-500">Mulai dengan melakukan perhitungan baru.</p>
+                                <div class="mt-6">
+                                    <a href="{{ route('perhitungan.ahp') }}" class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700">
+                                        Mulai Perhitungan Baru
+                                    </a>
+                                </div>
                             </div>
                         @else
                             <div class="overflow-x-auto">
@@ -101,7 +104,8 @@
                                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Kode</th>
                                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nama</th>
                                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tanggal</th>
-                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Aksi</th>
+                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Deskripsi</th>
+                                            <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Aksi</th>
                                         </tr>
                                     </thead>
                                     <tbody class="bg-white divide-y divide-gray-200">
@@ -112,21 +116,33 @@
                                             </td>
                                             <td class="px-6 py-4 whitespace-nowrap">
                                                 <div class="text-sm font-medium text-gray-900">{{ $hasil->nama_perhitungan }}</div>
-                                                @if($hasil->deskripsi)
-                                                    <div class="text-sm text-gray-500">{{ Str::limit($hasil->deskripsi, 50) }}</div>
-                                                @endif
                                             </td>
                                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                                 {{ $hasil->created_at->format('d/m/Y H:i') }}
                                             </td>
-                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                            <td class="px-6 py-4">
+                                                <div class="text-sm text-gray-500">{{ Str::limit($hasil->deskripsi, 100) ?? '-' }}</div>
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                                 <a href="{{ route('perhitungan.detail', $hasil->id) }}" 
-                                                   class="text-blue-600 hover:text-blue-900">Lihat Detail</a>
+                                                   class="text-blue-600 hover:text-blue-900 mr-3">Detail</a>
+                                                <form action="{{ route('perhitungan.hapus', $hasil->id) }}" method="POST" class="inline">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" 
+                                                            class="text-red-600 hover:text-red-900"
+                                                            onclick="return confirm('Apakah Anda yakin ingin menghapus riwayat ini?')">
+                                                        Hapus
+                                                    </button>
+                                                </form>
                                             </td>
                                         </tr>
                                         @endforeach
                                     </tbody>
                                 </table>
+                            </div>
+                            <div class="mt-4">
+                                {{ $riwayat->links() }}
                             </div>
                         @endif
                     </div>

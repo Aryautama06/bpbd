@@ -116,4 +116,9 @@ Route::middleware(['auth'])->group(function () {
     });
 
     Route::get('/analisis', [AnalisisController::class, 'index'])->name('analisis.index');
+
+    Route::get('/perhitungan/{hasil}/detail', [PerhitunganController::class, 'detail'])
+        ->name('perhitungan.detail');
+    Route::delete('/perhitungan/{hasil}', [PerhitunganController::class, 'hapus'])
+        ->name('perhitungan.hapus');
 });
