@@ -12,6 +12,7 @@ use App\Http\Controllers\DanaController;
 use App\Http\Controllers\KriteriaController;
 use App\Http\Controllers\AlternatifController;
 use App\Http\Controllers\PerhitunganController;
+use App\Http\Controllers\AnalisisController;
 use Illuminate\Support\Facades\Route;
 
 // Public Routes
@@ -111,4 +112,5 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/hitung-topsis', [PerhitunganController::class, 'hitungTopsis'])->name('hitung-topsis');
     });
 
+    Route::get('/analisis', [AnalisisController::class, 'index'])->name('analisis.index');
 });
