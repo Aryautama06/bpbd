@@ -3,7 +3,10 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Detail Perhitungan - {{ config('app.name') }}</title>
+    <head>
+        <title>Detail Perhitungan</title>
+        <link rel="icon" type="image/png" href="{{ asset('images/logo_bpbd.png') }}">
+    </head>
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 

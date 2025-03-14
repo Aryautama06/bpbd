@@ -4,7 +4,10 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>Manajemen Peralatan - {{ config('app.name') }}</title>
+    <head>
+        <title>Manajemen Peralatan - {{ config('app.name') }}</title>
+        <link rel="icon" type="image/png" href="{{ asset('images/logo_bpbd.png') }}">
+    </head>
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
@@ -306,7 +309,7 @@
             }).then((result) => {
                 if (result.isConfirmed) {
                     const form = document.getElementById('form-hapus');
-                    form.action = `{{ route('peralatan.destroy', '') }}/${id}`;
+                    form.action = `/peralatan/${id}`;  // Update the route
                     form.submit();
                 }
             });
@@ -352,5 +355,11 @@
         @endif
         </script>
     </div>
+
+    <!-- Add this right after the table or before closing body tag -->
+    <form id="form-hapus" method="POST" class="hidden">
+        @csrf
+        @method('DELETE')
+    </form>
 </body>
 </html>

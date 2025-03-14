@@ -72,11 +72,14 @@ class PeralatanController extends Controller
 
     public function destroy(Peralatan $peralatan)
     {
-        $peralatan->delete();
-
-        return redirect()
-            ->route('peralatan.index')
-            ->with('success', 'Data peralatan berhasil dihapus');
+        try {
+            $peralatan->delete();
+            return redirect()->route('peralatan.index')
+                ->with('success', 'Peralatan berhasil dihapus!');
+        } catch (\Exception $e) {
+            return redirect()->route('peralatan.index')
+                ->with('error', 'Gagal menghapus peralatan. Silakan coba lagi.');
+        }
     }
 
     public function detail(Peralatan $peralatan)

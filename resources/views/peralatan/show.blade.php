@@ -4,8 +4,11 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>Detail Peralatan - {{ $peralatan->nama_alat }} - BPBD</title>
-
+    <head>
+        <title>Detail Peralatan - {{ $peralatan->nama_alat }} - BPBD</title>
+        <link rel="icon" type="image/png" href="{{ asset('images/logo_bpbd.png') }}">
+    </head>
+    
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
     <!-- Tambahkan script Tailwind CDN sebagai fallback -->
