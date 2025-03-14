@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Dana;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage; // Fix the import here
+use Carbon\Carbon;
 
 class DanaController extends Controller
 {
@@ -25,28 +27,34 @@ class DanaController extends Controller
 
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'kode_anggaran' => 'required|string|unique:dana',
-            'nama_kegiatan' => 'required|string|max:255',
-            'jenis_dana' => 'required|in:APBD,APBN,Bantuan',
-            'jumlah' => 'required|numeric|min:0',
-            'tanggal_terima' => 'required|date',
-            'status' => 'required|in:Diterima,Digunakan,Sisa',
-            'keterangan' => 'nullable|string',
-            'dokumen' => 'nullable|file|mimes:pdf,doc,docx|max:2048'
+        $request->validate([
+            'kode_dana' => 'required|unique:dana',
+            'jumlah' => 'required|numeric',
+            'status' => 'required',
+            'keterangan' => 'nullable',
+            'bukti' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048'
         ]);
 
-        if ($request->hasFile('dokumen')) {
-            $dokumen = $request->file('dokumen');
-            $path = $dokumen->store('public/dokumen');
-            $validated['dokumen'] = $path;
+        try {
+            $data = $request->all();
+            
+            // Handle file upload
+            if ($request->hasFile('bukti')) {
+                $file = $request->file('bukti');
+                $fileName = time() . '_' . $file->getClientOriginalName();
+                $path = $file->storeAs('public/bukti_dana', $fileName);
+                $data['bukti'] = $fileName;
+            }
+
+            Dana::create($data);
+
+            return redirect()->route('dana.index')
+                ->with('success', 'Data dana berhasil ditambahkan!');
+        } catch (\Exception $e) {
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'Gagal menambahkan data dana. ' . $e->getMessage());
         }
-
-        Dana::create($validated);
-
-        return redirect()
-            ->route('dana.index')
-            ->with('success', 'Data dana berhasil ditambahkan');
     }
 
     public function show(Dana $dana)

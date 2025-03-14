@@ -81,7 +81,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/peralatan/{peralatan}/edit', [PeralatanController::class, 'edit'])->name('peralatan.edit');
     Route::put('/peralatan/{peralatan}', [PeralatanController::class, 'update'])->name('peralatan.update');
     Route::get('/peralatan/{peralatan}/detail', [PeralatanController::class, 'detail'])->name('peralatan.detail');
-    Route::delete('/peralatan/{peralatan}', [PeralatanController::class, 'destroy'])->name('peralatan.destroy');
     Route::resource('dana', DanaController::class);
     Route::get('/dana/{dana}', [DanaController::class, 'show'])->name('dana.show');
     Route::get('/dana/{dana}/edit', [DanaController::class, 'edit'])->name('dana.edit');
