@@ -121,4 +121,6 @@ Route::middleware(['auth'])->group(function () {
         ->name('perhitungan.detail');
     Route::delete('/perhitungan/{hasil}', [PerhitunganController::class, 'hapus'])
         ->name('perhitungan.hapus');
+    Route::get('/perhitungan/{hasil}/cetak', [PerhitunganController::class, 'cetak'])
+        ->name('perhitungan.cetak');
 });

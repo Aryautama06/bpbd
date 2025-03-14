@@ -725,5 +725,29 @@ class PerhitunganController extends Controller
 
         return view('perhitungan.detail', compact('hasil', 'kriterias', 'alternatifs'));
     }
+
+    public function hapus(HasilPerhitungan $hasil)
+    {
+        try {
+            $nama = $hasil->nama_perhitungan;
+            $hasil->delete();
+            
+            return redirect()
+                ->route('perhitungan.riwayat')
+                ->with('success', "Perhitungan '$nama' berhasil dihapus");
+        } catch (\Exception $e) {
+            return redirect()
+                ->route('perhitungan.riwayat')
+                ->with('error', 'Terjadi kesalahan saat menghapus data');
+        }
+    }
+
+    public function cetak(HasilPerhitungan $hasil)
+    {
+        $kriterias = Kriteria::orderBy('kode_kriteria')->get();
+        $alternatifs = Alternatif::orderBy('kode_alternatif')->get();
+        
+        return view('perhitungan.cetak', compact('hasil', 'kriterias', 'alternatifs'));
+    }
 }
 

@@ -29,6 +29,8 @@
     </script>
     
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <!-- Add SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 </head>
 <body class="min-h-screen bg-gray-50">
@@ -126,15 +128,10 @@
                                             <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                                 <a href="{{ route('perhitungan.detail', $hasil->id) }}" 
                                                    class="text-blue-600 hover:text-blue-900 mr-3">Detail</a>
-                                                <form action="{{ route('perhitungan.hapus', $hasil->id) }}" method="POST" class="inline">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="submit" 
-                                                            class="text-red-600 hover:text-red-900"
-                                                            onclick="return confirm('Apakah Anda yakin ingin menghapus riwayat ini?')">
-                                                        Hapus
-                                                    </button>
-                                                </form>
+                                                <button onclick="konfirmasiHapus('{{ $hasil->id }}', '{{ $hasil->nama_perhitungan }}')"
+                                                        class="text-red-600 hover:text-red-900">
+                                                    Hapus
+                                                </button>
                                             </td>
                                         </tr>
                                         @endforeach
@@ -150,5 +147,58 @@
             </div>
         </div>
     </div>
+
+    <form id="form-hapus" method="POST" style="display: none;">
+        @csrf
+        @method('DELETE')
+    </form>
+
+    <script>
+    function konfirmasiHapus(id, nama) {
+        Swal.fire({
+            title: 'Konfirmasi Hapus',
+            html: `Apakah Anda yakin ingin menghapus perhitungan<br><strong>${nama}</strong>?`,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#dc2626',
+            cancelButtonColor: '#6b7280',
+            confirmButtonText: 'Ya, Hapus',
+            cancelButtonText: 'Batal',
+            reverseButtons: true,
+            customClass: {
+                confirmButton: 'px-4 py-2 mr-2',
+                cancelButton: 'px-4 py-2'
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                const form = document.getElementById('form-hapus');
+                form.action = `{{ route('perhitungan.hapus', '') }}/${id}`;
+                form.submit();
+            }
+        });
+    }
+
+    // Add success notification if exists
+    @if(session('success'))
+        Swal.fire({
+            icon: 'success',
+            title: 'Berhasil!',
+            text: "{{ session('success') }}",
+            showConfirmButton: false,
+            timer: 2000
+        });
+    @endif
+
+    // Add error notification if exists
+    @if(session('error'))
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: "{{ session('error') }}",
+            showConfirmButton: true,
+            confirmButtonColor: '#dc2626'
+        });
+    @endif
+    </script>
 </body>
 </html>

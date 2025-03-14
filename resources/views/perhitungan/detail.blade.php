@@ -1,4 +1,3 @@
-ungan\detail.blade.php
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
@@ -54,13 +53,23 @@ ungan\detail.blade.php
                                 <p class="text-blue-100 mt-1">{{ $hasil->nama_perhitungan }}</p>
                             </div>
                         </div>
-                        <a href="{{ route('perhitungan.riwayat') }}" 
-                           class="inline-flex items-center px-4 py-2 bg-white/10 backdrop-blur-lg rounded-lg text-white hover:bg-white/20">
-                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 17l-5-5m0 0l5-5m-5 5h12"/>
-                            </svg>
-                            Kembali
-                        </a>
+                        <div class="flex items-center gap-4">
+                            <a href="{{ route('perhitungan.riwayat') }}" 
+                               class="inline-flex items-center px-4 py-2 bg-white/10 backdrop-blur-lg rounded-lg text-white hover:bg-white/20">
+                                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 17l-5-5m0 0l5-5m-5 5h12"/>
+                                </svg>
+                                Kembali
+                            </a>
+                            <a href="{{ route('perhitungan.cetak', $hasil->id) }}" 
+                               target="_blank"
+                               class="inline-flex items-center px-4 py-2 bg-white/10 backdrop-blur-lg rounded-lg text-white hover:bg-white/20">
+                                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/>
+                                </svg>
+                                Cetak Laporan
+                            </a>
+                        </div>
                     </div>
                     
                     <!-- Info Cards -->
