@@ -108,6 +108,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/topsis', [PerhitunganController::class, 'topsis'])->name('topsis');
         Route::post('/simpan-nilai', [PerhitunganController::class, 'simpanNilai'])->name('simpan-nilai');
         Route::post('/simpan-perbandingan', [PerhitunganController::class, 'simpanPerbandingan'])->name('simpan-perbandingan');
+        Route::post('/hitung-topsis', [PerhitunganController::class, 'hitungTopsis'])->name('hitung-topsis');
     });
 
 });

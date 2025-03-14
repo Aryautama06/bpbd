@@ -122,34 +122,22 @@
                                     </div>
 
                                     <!-- Jenis -->
-                                    <div>
-                                        <label for="jenis" class="block text-sm font-medium text-gray-700 mb-2">
+                                    <div class="mb-6">
+                                        <label for="jenis" class="block text-sm font-medium text-gray-700">
                                             Jenis Kriteria <span class="text-red-500">*</span>
                                         </label>
                                         <select name="jenis" 
                                                 id="jenis" 
-                                                class="form-select w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500"
-                                                required>
+                                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
                                             <option value="">Pilih Jenis Kriteria</option>
-                                            <option value="Benefit" {{ old('jenis') == 'Benefit' ? 'selected' : '' }}>Benefit (Keuntungan)</option>
-                                            <option value="Cost" {{ old('jenis') == 'Cost' ? 'selected' : '' }}>Cost (Biaya)</option>
+                                            @foreach(App\Models\Kriteria::jenisOptions() as $value => $label)
+                                                <option value="{{ $value }}" {{ old('jenis') == $value ? 'selected' : '' }}>
+                                                    {{ $label }}
+                                                </option>
+                                            @endforeach
                                         </select>
                                         @error('jenis')
-                                            <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
-                                        @enderror
-                                    </div>
-
-                                    <!-- Keterangan -->
-                                    <div class="md:col-span-2">
-                                        <label for="keterangan" class="block text-sm font-medium text-gray-700 mb-2">
-                                            Keterangan
-                                        </label>
-                                        <textarea name="keterangan" 
-                                                  id="keterangan" 
-                                                  rows="3" 
-                                                  class="form-textarea w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500">{{ old('keterangan') }}</textarea>
-                                        @error('keterangan')
-                                            <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
+                                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                         @enderror
                                     </div>
                                 </div>

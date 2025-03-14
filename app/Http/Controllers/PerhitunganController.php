@@ -6,6 +6,7 @@ use App\Models\Perhitungan;
 use App\Models\Kriteria;       
 use App\Models\Alternatif;     
 use App\Models\NilaiAlternatif;
+use App\Models\PerbandinganKriteria;
 use Illuminate\Http\Request;
 
 class PerhitunganController extends Controller
@@ -45,73 +46,69 @@ class PerhitunganController extends Controller
         return view('perhitungan.index', compact('kriterias', 'alternatifs', 'nilaiAlternatifs'));
     }
 
-    private function hitungAHP()
+    public function hitungAHP()
     {
+        // 1. Struktur Hierarki sudah terdefinisi di database (tabel kriterias)
         $kriterias = Kriteria::all();
-        $alternatifs = Alternatif::all();
-        $nilaiAlternatifs = NilaiAlternatif::all();
-        
-        // Hitung bobot kriteria
-        $totalBobot = $kriterias->sum('bobot');
-        $bobotKriteria = $kriterias->mapWithKeys(function ($kriteria) use ($totalBobot) {
-            return [$kriteria->id => $kriteria->bobot / $totalBobot];
-        });
 
-        // Hitung nilai alternatif
-        $nilaiAkhirAHP = [];
-        foreach ($alternatifs as $alternatif) {
-            $total = 0;
-            foreach ($kriterias as $kriteria) {
-                $nilai = $nilaiAlternatifs
-                    ->where('alternatif_id', $alternatif->id)
-                    ->where('kriteria_id', $kriteria->id)
-                    ->first();
+        // 2. Menyusun Matriks Perbandingan Berpasangan
+        $matriksBerpasangan = $this->getMatriksBerpasangan($kriterias);
 
-                if ($nilai) {
-                    $nilaiNormalisasi = $kriteria->jenis === 'Cost' 
-                        ? 1 / $nilai->nilai 
-                        : $nilai->nilai;
-                    
-                    $total += $nilaiNormalisasi * $bobotKriteria[$kriteria->id];
-                }
-            }
-            $nilaiAkhirAHP[$alternatif->id] = $total;
-        }
+        // 3. Normalisasi Matriks
+        $matriksNormal = $this->normalisasiMatriks($matriksBerpasangan, $kriterias);
+
+        // 4. Menghitung Bobot Prioritas
+        $bobotPrioritas = $this->hitungBobotPrioritas($matriksNormal, $kriterias);
+
+        // 5. Menghitung Nilai Eigen Maksimum (λmax)
+        $lambdaMax = $this->hitungLambdaMax($matriksBerpasangan, $bobotPrioritas, $kriterias);
+
+        // 6 & 7. Menghitung CI dan CR
+        $konsistensi = $this->hitungKonsistensi($lambdaMax, count($kriterias));
 
         return [
-            'bobotKriteria' => $bobotKriteria,
-            'nilaiAkhirAHP' => $nilaiAkhirAHP
+            'matriksBerpasangan' => $matriksBerpasangan,
+            'matriksNormal' => $matriksNormal,
+            'bobotPrioritas' => $bobotPrioritas,
+            'lambdaMax' => $lambdaMax,
+            'konsistensi' => $konsistensi
         ];
     }
 
-    public function ahp()
+    private function getMatriksBerpasangan($kriterias)
     {
-        $kriterias = Kriteria::all();
-        $alternatifs = Alternatif::all();
-        $nilaiAlternatifs = NilaiAlternatif::all();
-
-        // 1. Initialize the pairwise comparison matrix
-        $matriksBerpasangan = [];
+        $matriks = [];
         foreach ($kriterias as $kriteria1) {
             foreach ($kriterias as $kriteria2) {
                 if ($kriteria1->id === $kriteria2->id) {
-                    $matriksBerpasangan[$kriteria1->id][$kriteria2->id] = 1;
+                    // Diagonal utama bernilai 1
+                    $matriks[$kriteria1->id][$kriteria2->id] = 1;
                 } else {
-                    // Get saved comparison value or use default
-                    $nilai = PerbandinganKriteria::where('kriteria1_id', $kriteria1->id)
+                    // Ambil nilai perbandingan dari database
+                    $perbandingan = PerbandinganKriteria::where('kriteria1_id', $kriteria1->id)
                         ->where('kriteria2_id', $kriteria2->id)
                         ->first();
-                    
-                    if ($nilai) {
-                        $matriksBerpasangan[$kriteria1->id][$kriteria2->id] = $nilai->nilai;
+
+                    if ($perbandingan) {
+                        $matriks[$kriteria1->id][$kriteria2->id] = $perbandingan->nilai;
+                        // Nilai kebalikan untuk pasangan bersesuaian
+                        $matriks[$kriteria2->id][$kriteria1->id] = 1 / $perbandingan->nilai;
                     } else {
-                        $matriksBerpasangan[$kriteria1->id][$kriteria2->id] = 1;
+                        // Default value jika belum ada perbandingan
+                        $matriks[$kriteria1->id][$kriteria2->id] = 1;
+                        $matriks[$kriteria2->id][$kriteria1->id] = 1;
                     }
                 }
             }
         }
+        return $matriks;
+    }
 
-        // 2. Calculate column sums
+    private function normalisasiMatriks($matriksBerpasangan, $kriterias)
+    {
+        $matriksNormal = [];
+        
+        // Hitung jumlah setiap kolom
         $jumlahKolom = [];
         foreach ($kriterias as $kriteria2) {
             $sum = 0;
@@ -121,187 +118,190 @@ class PerhitunganController extends Controller
             $jumlahKolom[$kriteria2->id] = $sum;
         }
 
-        // 3. Normalize matrix and calculate priority weights
-        $matriksNormal = [];
-        $bobotPriority = [];
+        // Normalisasi dengan membagi setiap elemen dengan jumlah kolomnya
         foreach ($kriterias as $kriteria1) {
-            $sum = 0;
             foreach ($kriterias as $kriteria2) {
                 if ($jumlahKolom[$kriteria2->id] != 0) {
                     $matriksNormal[$kriteria1->id][$kriteria2->id] = 
                         $matriksBerpasangan[$kriteria1->id][$kriteria2->id] / $jumlahKolom[$kriteria2->id];
-                    $sum += $matriksNormal[$kriteria1->id][$kriteria2->id];
                 } else {
                     $matriksNormal[$kriteria1->id][$kriteria2->id] = 0;
                 }
             }
-            $bobotPriority[$kriteria1->id] = $sum / count($kriterias);
         }
 
-        // 4. Calculate weighted sum matrix
-        $weightedSum = [];
+        return $matriksNormal;
+    }
+
+    private function hitungBobotPrioritas($matriksNormal, $kriterias)
+    {
+        $bobot = [];
         foreach ($kriterias as $kriteria1) {
             $sum = 0;
             foreach ($kriterias as $kriteria2) {
-                $sum += $matriksBerpasangan[$kriteria1->id][$kriteria2->id] * 
-                       ($bobotPriority[$kriteria2->id] ?? 0);
+                $sum += $matriksNormal[$kriteria1->id][$kriteria2->id];
             }
-            $weightedSum[$kriteria1->id] = $sum;
+            // Bobot prioritas adalah rata-rata baris matriks normal
+            $bobot[$kriteria1->id] = $sum / count($kriterias);
         }
+        return $bobot;
+    }
 
-        // 5. Calculate consistency measures
-        $consistencyVector = [];
+    private function hitungLambdaMax($matriksBerpasangan, $bobotPrioritas, $kriterias)
+    {
         $lambdaValues = [];
         
-        foreach ($kriterias as $kriteria) {
-            if (isset($bobotPriority[$kriteria->id]) && $bobotPriority[$kriteria->id] > 0) {
-                $lambdaValues[] = $weightedSum[$kriteria->id] / $bobotPriority[$kriteria->id];
-                $consistencyVector[$kriteria->id] = $weightedSum[$kriteria->id] / $bobotPriority[$kriteria->id];
-            } else {
-                $lambdaValues[] = 0;
-                $consistencyVector[$kriteria->id] = 0;
+        foreach ($kriterias as $kriteria1) {
+            $sum = 0;
+            foreach ($kriterias as $kriteria2) {
+                $sum += $matriksBerpasangan[$kriteria1->id][$kriteria2->id] * $bobotPrioritas[$kriteria2->id];
+            }
+            if ($bobotPrioritas[$kriteria1->id] != 0) {
+                $lambdaValues[] = $sum / $bobotPrioritas[$kriteria1->id];
             }
         }
 
-        $n = count($kriterias);
-        
-        if ($n > 1) {
-            $lambdaMax = array_sum($lambdaValues) / count($lambdaValues);
-            $CI = ($lambdaMax - $n) / ($n - 1);
-            $RI = $this->randomIndex[$n] ?? 1.49;
-            $CR = $RI != 0 ? $CI / $RI : 0;
-        } else {
-            $lambdaMax = 1;
-            $CI = 0;
-            $CR = 0;
-        }
+        // λmax adalah rata-rata dari semua λ
+        return array_sum($lambdaValues) / count($lambdaValues);
+    }
 
-        $hasilAHP = [
-            'skala' => $this->skala,
-            'matriksBerpasangan' => $matriksBerpasangan,
-            'jumlahKolom' => $jumlahKolom,
-            'matriksNormal' => $matriksNormal,
-            'bobotKriteria' => $bobotPriority,
-            'weightedSum' => $weightedSum,
-            'consistencyVector' => $consistencyVector,
-            'lambdaMax' => $lambdaMax,
-            'consistencyIndex' => $CI,
-            'consistencyRatio' => $CR,
+    private function hitungKonsistensi($lambdaMax, $n)
+    {
+        // Hitung Consistency Index (CI)
+        $CI = ($lambdaMax - $n) / ($n - 1);
+
+        // Hitung Consistency Ratio (CR)
+        $RI = $this->randomIndex[$n] ?? 1.49;
+        $CR = $CI / $RI;
+
+        return [
+            'CI' => $CI,
+            'CR' => $CR,
             'isConsistent' => $CR <= 0.1
         ];
+    }
 
-        return view('perhitungan.ahp', compact(
-            'kriterias',
-            'alternatifs',
-            'nilaiAlternatifs',
-            'hasilAHP'
-        ))->with('randomIndex', $this->randomIndex);
+    public function ahp()
+    {
+        $kriterias = Kriteria::orderBy('kode_kriteria')->get();
+        $perbandinganValues = []; // Initialize empty or get from storage
+        $hasilAHP = session('hasilAHP', []); // Get results from session if exists
+        
+        return view('perhitungan.ahp', compact('kriterias', 'perbandinganValues', 'hasilAHP'));
     }
 
     public function topsis()
     {
-        $kriterias = Kriteria::all();
-        $alternatifs = Alternatif::all();
-        $nilaiAlternatifs = NilaiAlternatif::all();
+        $kriterias = Kriteria::orderBy('kode_kriteria')->get();
+        $alternatifs = Alternatif::orderBy('kode_alternatif')->get();
+        $hasilAHP = session('hasilAHP');
 
-        // Dapatkan hasil AHP terlebih dahulu
-        $hasilAHP = $this->hitungAHP();
-        $bobotKriteria = $hasilAHP['bobotKriteria'];
+        // Pastikan ada hasil AHP sebelum melanjutkan ke TOPSIS
+        if (!$hasilAHP || !isset($hasilAHP['bobotPrioritas'])) {
+            return redirect()
+                ->route('perhitungan.ahp')
+                ->with('error', 'Harap lakukan perhitungan AHP terlebih dahulu');
+        }
 
-        // Matrix keputusan menggunakan nilai AHP
-        $matrix = [];
+        return view('perhitungan.topsis', compact('kriterias', 'alternatifs', 'hasilAHP'));
+    }
+
+    public function hitungTopsis(Request $request)
+    {
+        $kriterias = Kriteria::orderBy('kode_kriteria')->get();
+        $alternatifs = Alternatif::orderBy('kode_alternatif')->get();
+        $hasilAHP = session('hasilAHP');
+        $nilai = $request->input('nilai');
+
+        // 1. Membuat matriks keputusan
+        $matriksKeputusan = [];
         foreach ($alternatifs as $alternatif) {
             foreach ($kriterias as $kriteria) {
-                $nilai = $nilaiAlternatifs
-                    ->where('alternatif_id', $alternatif->id)
-                    ->where('kriteria_id', $kriteria->id)
-                    ->first();
-                
-                // Gunakan nilai dari AHP jika ada
-                $nilaiAHP = $hasilAHP['nilaiAkhirAHP'][$alternatif->id] ?? 0;
-                $matrix[$alternatif->id][$kriteria->id] = $nilai ? $nilaiAHP : 0;
+                $matriksKeputusan[$alternatif->id][$kriteria->id] = 
+                    floatval($nilai[$alternatif->id][$kriteria->id]);
             }
         }
 
-        // Normalisasi matrix
-        $normalizedMatrix = [];
+        // 2. Normalisasi matriks keputusan
+        $pembagi = [];
         foreach ($kriterias as $kriteria) {
             $sum = 0;
             foreach ($alternatifs as $alternatif) {
-                $sum += pow($matrix[$alternatif->id][$kriteria->id], 2);
+                $sum += pow($matriksKeputusan[$alternatif->id][$kriteria->id], 2);
             }
-            $sqrt = sqrt($sum);
-
-            foreach ($alternatifs as $alternatif) {
-                $normalizedMatrix[$alternatif->id][$kriteria->id] = 
-                    $matrix[$alternatif->id][$kriteria->id] / ($sqrt ?: 1);
-            }
+            $pembagi[$kriteria->id] = sqrt($sum);
         }
 
-        // Matrix terbobot menggunakan bobot dari AHP
-        $weightedMatrix = [];
+        $matriksNormal = [];
         foreach ($alternatifs as $alternatif) {
             foreach ($kriterias as $kriteria) {
-                $weightedMatrix[$alternatif->id][$kriteria->id] = 
-                    $normalizedMatrix[$alternatif->id][$kriteria->id] * $bobotKriteria[$kriteria->id];
+                $matriksNormal[$alternatif->id][$kriteria->id] = 
+                    $matriksKeputusan[$alternatif->id][$kriteria->id] / $pembagi[$kriteria->id];
             }
         }
 
-        // Solusi ideal positif & negatif
-        $positifIdeal = [];
-        $negatifIdeal = [];
+        // 3. Pembobotan matriks yang dinormalisasi
+        $matriksTerbobot = [];
+        foreach ($alternatifs as $alternatif) {
+            foreach ($kriterias as $kriteria) {
+                $matriksTerbobot[$alternatif->id][$kriteria->id] = 
+                    $matriksNormal[$alternatif->id][$kriteria->id] * $hasilAHP['bobotPrioritas'][$kriteria->id];
+            }
+        }
+
+        // 4. Menentukan solusi ideal positif dan negatif
+        $aPlus = [];
+        $aMinus = [];
         foreach ($kriterias as $kriteria) {
-            $values = array_column($weightedMatrix, $kriteria->id);
-            
-            if ($kriteria->jenis === 'Benefit') {
-                $positifIdeal[$kriteria->id] = max($values);
-                $negatifIdeal[$kriteria->id] = min($values);
+            $nilai_kriteria = array_column($matriksTerbobot, $kriteria->id);
+            if ($kriteria->jenis === 'benefit') {
+                $aPlus[$kriteria->id] = max($nilai_kriteria);
+                $aMinus[$kriteria->id] = min($nilai_kriteria);
             } else {
-                $positifIdeal[$kriteria->id] = min($values);
-                $negatifIdeal[$kriteria->id] = max($values);
+                $aPlus[$kriteria->id] = min($nilai_kriteria);
+                $aMinus[$kriteria->id] = max($nilai_kriteria);
             }
         }
 
-        // Jarak solusi ideal
-        $jarakPositif = [];
-        $jarakNegatif = [];
+        // 5. Menghitung jarak dengan solusi ideal
+        $dPlus = [];
+        $dMinus = [];
         foreach ($alternatifs as $alternatif) {
-            $sumPositif = 0;
-            $sumNegatif = 0;
-            
+            $sumPlus = 0;
+            $sumMinus = 0;
             foreach ($kriterias as $kriteria) {
-                $sumPositif += pow($weightedMatrix[$alternatif->id][$kriteria->id] - $positifIdeal[$kriteria->id], 2);
-                $sumNegatif += pow($weightedMatrix[$alternatif->id][$kriteria->id] - $negatifIdeal[$kriteria->id], 2);
+                $sumPlus += pow($matriksTerbobot[$alternatif->id][$kriteria->id] - $aPlus[$kriteria->id], 2);
+                $sumMinus += pow($matriksTerbobot[$alternatif->id][$kriteria->id] - $aMinus[$kriteria->id], 2);
             }
-            
-            $jarakPositif[$alternatif->id] = sqrt($sumPositif);
-            $jarakNegatif[$alternatif->id] = sqrt($sumNegatif);
+            $dPlus[$alternatif->id] = sqrt($sumPlus);
+            $dMinus[$alternatif->id] = sqrt($sumMinus);
         }
 
-        // Nilai preferensi
-        $nilaiAkhir = [];
+        // 6. Menghitung nilai preferensi
+        $preferensi = [];
         foreach ($alternatifs as $alternatif) {
-            $nilaiAkhir[$alternatif->id] = 
-                $jarakNegatif[$alternatif->id] / 
-                ($jarakPositif[$alternatif->id] + $jarakNegatif[$alternatif->id]);
+            $preferensi[$alternatif->id] = $dMinus[$alternatif->id] / ($dMinus[$alternatif->id] + $dPlus[$alternatif->id]);
         }
 
-        // Urutkan hasil
-        arsort($nilaiAkhir);
+        // Urutkan hasil berdasarkan nilai preferensi
+        arsort($preferensi);
 
-        return view('perhitungan.topsis', compact(
-            'kriterias',
-            'alternatifs',
-            'hasilAHP',
-            'matrix',
-            'normalizedMatrix',
-            'weightedMatrix',
-            'positifIdeal',
-            'negatifIdeal',
-            'jarakPositif',
-            'jarakNegatif',
-            'nilaiAkhir'
-        ));
+        $hasilTOPSIS = [
+            'matriksKeputusan' => $matriksKeputusan,
+            'matriksNormal' => $matriksNormal,
+            'matriksTerbobot' => $matriksTerbobot,
+            'aPlus' => $aPlus,
+            'aMinus' => $aMinus,
+            'dPlus' => $dPlus,
+            'dMinus' => $dMinus,
+            'preferensi' => $preferensi
+        ];
+
+        session(['hasilTOPSIS' => $hasilTOPSIS]);
+
+        return redirect()
+            ->route('perhitungan.topsis')
+            ->with('success', 'Perhitungan TOPSIS berhasil dilakukan');
     }
 
     public function nilaiAlternatif(Request $request)
@@ -355,39 +355,322 @@ class PerhitunganController extends Controller
 
     public function simpanPerbandingan(Request $request)
     {
-        $request->validate([
-            'perbandingan' => 'required|array',
-            'perbandingan.*.*' => 'required|numeric|min:0.11|max:9'
-        ], [
-            'perbandingan.required' => 'Data perbandingan harus diisi',
-            'perbandingan.*.*.required' => 'Semua nilai perbandingan harus diisi',
-            'perbandingan.*.*.numeric' => 'Nilai harus berupa angka',
-            'perbandingan.*.*.min' => 'Nilai minimal adalah 1/9 (0.11)',
-            'perbandingan.*.*.max' => 'Nilai maksimal adalah 9'
-        ]);
-
-        $kriterias = Kriteria::all();
+        $perbandingan = $request->input('perbandingan');
+        $kriterias = Kriteria::orderBy('kode_kriteria')->get();
         
-        // Save to database
-        foreach ($request->perbandingan as $kriteria1Id => $values) {
-            foreach ($values as $kriteria2Id => $nilai) {
-                // Update bobot for both criteria
-                $kriteria1 = $kriterias->find($kriteria1Id);
-                $kriteria2 = $kriterias->find($kriteria2Id);
-                
-                if ($kriteria1 && $kriteria2) {
-                    $kriteria1->bobot = $nilai;
-                    $kriteria2->bobot = 1 / $nilai;
-                    
-                    $kriteria1->save();
-                    $kriteria2->save();
+        // 1. Matriks Perbandingan Berpasangan
+        $matriksBerpasangan = [];
+        foreach ($kriterias as $kriteria1) {
+            foreach ($kriterias as $kriteria2) {
+                if ($kriteria1->id === $kriteria2->id) {
+                    $matriksBerpasangan[$kriteria1->id][$kriteria2->id] = 1;
+                } else {
+                    if (isset($perbandingan[$kriteria1->id][$kriteria2->id])) {
+                        $matriksBerpasangan[$kriteria1->id][$kriteria2->id] = floatval($perbandingan[$kriteria1->id][$kriteria2->id]);
+                    } else if (isset($perbandingan[$kriteria2->id][$kriteria1->id])) {
+                        $matriksBerpasangan[$kriteria1->id][$kriteria2->id] = 1 / floatval($perbandingan[$kriteria2->id][$kriteria1->id]);
+                    } else {
+                        $matriksBerpasangan[$kriteria1->id][$kriteria2->id] = 1;
+                    }
                 }
             }
         }
 
+        // 2. Hitung Jumlah Kolom
+        $jumlahKolom = [];
+        foreach ($kriterias as $kriteria2) {
+            $sum = 0;
+            foreach ($kriterias as $kriteria1) {
+                $sum += $matriksBerpasangan[$kriteria1->id][$kriteria2->id];
+            }
+            $jumlahKolom[$kriteria2->id] = $sum;
+        }
+
+        // 3. Normalisasi Matriks
+        $matriksNormal = [];
+        foreach ($kriterias as $kriteria1) {
+            foreach ($kriterias as $kriteria2) {
+                $matriksNormal[$kriteria1->id][$kriteria2->id] = 
+                    $matriksBerpasangan[$kriteria1->id][$kriteria2->id] / $jumlahKolom[$kriteria2->id];
+            }
+        }
+
+        // 4. Hitung Bobot Prioritas
+        $bobotPrioritas = [];
+        foreach ($kriterias as $kriteria1) {
+            $sum = 0;
+            foreach ($kriterias as $kriteria2) {
+                $sum += $matriksNormal[$kriteria1->id][$kriteria2->id];
+            }
+            $bobotPrioritas[$kriteria1->id] = $sum / count($kriterias);
+        }
+
+        // 5. Hitung λmax
+        $lambdaMax = 0;
+        foreach ($kriterias as $kriteria) {
+            $sum = 0;
+            foreach ($kriterias as $kriteria2) {
+                $sum += $matriksBerpasangan[$kriteria2->id][$kriteria->id] * $bobotPrioritas[$kriteria2->id];
+            }
+            $lambdaMax += $sum;
+        }
+
+        $n = count($kriterias);
+        $lambdaMax = $lambdaMax / $n;
+
+        // 6. Hitung CI
+        $CI = ($n > 1) ? ($lambdaMax - $n) / ($n - 1) : 0;
+        
+        // 7. Hitung CR
+        $RI = [0, 0, 0.58, 0.90, 1.12, 1.24, 1.32, 1.41, 1.45, 1.49];
+        $currentRI = ($n <= 10 && $n > 0) ? $RI[$n - 1] : 1.49;
+        
+        $CR = ($currentRI > 0) ? ($CI / $currentRI) : 0;
+        $isConsistent = $CR <= 0.1;
+
+        // Simpan hasil perhitungan
+        $hasilAHP = [
+            'matriksBerpasangan' => $matriksBerpasangan,
+            'jumlahKolom' => $jumlahKolom,
+            'matriksNormal' => $matriksNormal,
+            'bobotPrioritas' => $bobotPrioritas,
+            'lambdaMax' => $lambdaMax,
+            'konsistensi' => [
+                'CI' => $CI,
+                'CR' => $CR,
+                'RI' => $currentRI,
+                'n' => $n,
+                'isConsistent' => $isConsistent
+            ],
+            'showResults' => true // Flag untuk menampilkan hasil
+        ];
+
+        // Simpan ke session
+        session(['hasilAHP' => $hasilAHP]);
+
         return redirect()
             ->route('perhitungan.ahp')
-            ->with('success', 'Nilai perbandingan berhasil disimpan');
+            ->with('success', 'Perbandingan berhasil disimpan dan dihitung');
+    }
+
+    // AHP Helper Methods
+    private function buildPairwiseMatrix($kriterias, $perbandingan)
+    {
+        $matrix = [];
+        foreach ($kriterias as $k1) {
+            foreach ($kriterias as $k2) {
+                if ($k1->id === $k2->id) {
+                    $matrix[$k1->id][$k2->id] = 1;
+                } else {
+                    $nilai = $perbandingan
+                        ->where('kriteria1_id', $k1->id)
+                        ->where('kriteria2_id', $k2->id)
+                        ->first();
+                    
+                    if ($nilai) {
+                        $matrix[$k1->id][$k2->id] = $nilai->nilai;
+                        $matrix[$k2->id][$k1->id] = 1 / $nilai->nilai;
+                    } else {
+                        $matrix[$k1->id][$k2->id] = 1;
+                        $matrix[$k2->id][$k1->id] = 1;
+                    }
+                }
+            }
+        }
+        return $matrix;
+    }
+
+    private function calculatePriorityWeights($matrix, $kriterias)
+    {
+        $weights = [];
+        $n = count($kriterias);
+
+        // Calculate column sums
+        $colSums = [];
+        foreach ($kriterias as $k2) {
+            $sum = 0;
+            foreach ($kriterias as $k1) {
+                $sum += $matrix[$k1->id][$k2->id];
+            }
+            $colSums[$k2->id] = $sum;
+        }
+
+        // Normalize and calculate average
+        foreach ($kriterias as $k1) {
+            $sum = 0;
+            foreach ($kriterias as $k2) {
+                $sum += $matrix[$k1->id][$k2->id] / $colSums[$k2->id];
+            }
+            $weights[$k1->id] = $sum / $n;
+        }
+
+        return $weights;
+    }
+
+    private function checkConsistency($matrix, $weights, $kriterias)
+    {
+        $n = count($kriterias);
+        
+        // Calculate weighted sum
+        $weightedSum = [];
+        foreach ($kriterias as $k1) {
+            $sum = 0;
+            foreach ($kriterias as $k2) {
+                $sum += $matrix[$k1->id][$k2->id] * $weights[$k2->id];
+            }
+            $weightedSum[$k1->id] = $sum;
+        }
+
+        // Calculate lambda max
+        $lambdaMax = 0;
+        foreach ($kriterias as $k) {
+            $lambdaMax += $weightedSum[$k->id] / ($weights[$k->id] * $n);
+        }
+
+        // Calculate CI and CR
+        $CI = ($lambdaMax - $n) / ($n - 1);
+        $RI = $this->randomIndex[$n] ?? 1.49;
+        $CR = $CI / $RI;
+
+        return [
+            'CI' => $CI,
+            'CR' => $CR,
+            'isConsistent' => $CR <= 0.1
+        ];
+    }
+
+    // Metode Helper TOPSIS
+    private function buildDecisionMatrix($alternatifs, $kriterias, $nilaiAlternatifs)
+    {
+        $matrix = [];
+        foreach ($alternatifs as $alternatif) {
+            foreach ($kriterias as $kriteria) {
+                $nilai = $nilaiAlternatifs
+                    ->where('alternatif_id', $alternatif->id)
+                    ->where('kriteria_id', $kriteria->id)
+                    ->first();
+                
+                $matrix[$alternatif->id][$kriteria->id] = $nilai ? $nilai->nilai : 0;
+            }
+        }
+        return $matrix;
+    }
+
+    private function normalizeMatrix($matrix)
+    {
+        $normalizedMatrix = [];
+        $pembagi = [];
+
+        // Hitung pembagi (akar kuadrat jumlah kuadrat)
+        foreach ($matrix as $altId => $kriteriaValues) {
+            foreach ($kriteriaValues as $kritId => $nilai) {
+                if (!isset($pembagi[$kritId])) {
+                    $pembagi[$kritId] = 0;
+                }
+                $pembagi[$kritId] += pow($nilai, 2);
+            }
+        }
+
+        // Normalisasi setiap nilai
+        foreach ($matrix as $altId => $kriteriaValues) {
+            foreach ($kriteriaValues as $kritId => $nilai) {
+                $normalizedMatrix[$altId][$kritId] = 
+                    $pembagi[$kritId] != 0 ? $nilai / sqrt($pembagi[$kritId]) : 0;
+            }
+        }
+
+        return $normalizedMatrix;
+    }
+
+    private function calculateWeightedMatrix($normalizedMatrix, $weights)
+    {
+        $weightedMatrix = [];
+        foreach ($normalizedMatrix as $altId => $kriteriaValues) {
+            foreach ($kriteriaValues as $kritId => $nilai) {
+                $weightedMatrix[$altId][$kritId] = $nilai * ($weights[$kritId] ?? 0);
+            }
+        }
+        return $weightedMatrix;
+    }
+
+    private function determineIdealSolutions($weightedMatrix, $kriterias)
+    {
+        $positif = [];
+        $negatif = [];
+
+        // Inisialisasi array untuk menyimpan semua nilai per kriteria
+        $nilaiPerKriteria = [];
+        foreach ($weightedMatrix as $altValues) {
+            foreach ($altValues as $kritId => $nilai) {
+                $nilaiPerKriteria[$kritId][] = $nilai;
+            }
+        }
+
+        // Tentukan solusi ideal positif dan negatif
+        foreach ($kriterias as $kriteria) {
+            if ($kriteria->jenis === 'Benefit') {
+                $positif[$kriteria->id] = max($nilaiPerKriteria[$kriteria->id]);
+                $negatif[$kriteria->id] = min($nilaiPerKriteria[$kriteria->id]);
+            } else {
+                $positif[$kriteria->id] = min($nilaiPerKriteria[$kriteria->id]);
+                $negatif[$kriteria->id] = max($nilaiPerKriteria[$kriteria->id]);
+            }
+        }
+
+        return [
+            'positif' => $positif,
+            'negatif' => $negatif
+        ];
+    }
+
+    private function calculateDistances($weightedMatrix, $solusiIdeal)
+    {
+        $jarakPositif = [];
+        $jarakNegatif = [];
+
+        foreach ($weightedMatrix as $altId => $kriteriaValues) {
+            $sumPositif = 0;
+            $sumNegatif = 0;
+
+            foreach ($kriteriaValues as $kritId => $nilai) {
+                $sumPositif += pow($nilai - $solusiIdeal['positif'][$kritId], 2);
+                $sumNegatif += pow($nilai - $solusiIdeal['negatif'][$kritId], 2);
+            }
+
+            $jarakPositif[$altId] = sqrt($sumPositif);
+            $jarakNegatif[$altId] = sqrt($sumNegatif);
+        }
+
+        return [
+            'positif' => $jarakPositif,
+            'negatif' => $jarakNegatif
+        ];
+    }
+
+    private function calculatePreferences($jarak)
+    {
+        $preferensi = [];
+        foreach ($jarak['positif'] as $altId => $dPlus) {
+            $dMinus = $jarak['negatif'][$altId];
+            $preferensi[$altId] = $dMinus / ($dPlus + $dMinus);
+        }
+        return $preferensi;
+    }
+
+    private function rankAlternatives($preferensi)
+    {
+        arsort($preferensi); // Urutkan dari nilai tertinggi ke terendah
+        $peringkat = [];
+        $rank = 1;
+        
+        foreach ($preferensi as $altId => $nilai) {
+            $peringkat[$altId] = [
+                'nilai' => $nilai,
+                'peringkat' => $rank++
+            ];
+        }
+        
+        return $peringkat;
     }
 }
 

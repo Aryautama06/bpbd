@@ -4,12 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Models\Kriteria;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class KriteriaController extends Controller
 {
     public function index()
     {
-        $kriterias = Kriteria::latest()->get();
+        $kriterias = Kriteria::all();
         $totalBobot = Kriteria::sum('bobot');
         $totalBenefit = Kriteria::where('jenis', 'Benefit')->count();
         $totalCost = Kriteria::where('jenis', 'Cost')->count();
@@ -22,17 +23,29 @@ class KriteriaController extends Controller
         return view('kriteria.create');
     }
 
+    protected function getValidationMessages()
+    {
+        return [
+            'kode_kriteria.required' => 'Kode kriteria harus diisi',
+            'kode_kriteria.unique' => 'Kode kriteria sudah digunakan',
+            'nama_kriteria.required' => 'Nama kriteria harus diisi',
+            'jenis.required' => 'Jenis kriteria harus dipilih',
+            'jenis.in' => 'Jenis kriteria tidak valid'
+        ];
+    }
+
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'kode_kriteria' => 'required|string|unique:kriteria',
-            'nama_kriteria' => 'required|string|max:255',
-            'bobot' => 'required|integer|min:1|max:100',
-            'jenis' => 'required|in:Benefit,Cost',
-            'keterangan' => 'nullable|string'
-        ]);
+        $validator = Validator::make($request->all(), Kriteria::rules());
 
-        Kriteria::create($validated);
+        if ($validator->fails()) {
+            return redirect()
+                ->route('kriteria.create')
+                ->withErrors($validator)
+                ->withInput();
+        }
+
+        Kriteria::create($request->all());
 
         return redirect()
             ->route('kriteria.index')
@@ -51,15 +64,16 @@ class KriteriaController extends Controller
 
     public function update(Request $request, Kriteria $kriteria)
     {
-        $validated = $request->validate([
-            'kode_kriteria' => 'required|string|unique:kriteria,kode_kriteria,' . $kriteria->id,
-            'nama_kriteria' => 'required|string|max:255',
-            'bobot' => 'required|integer|min:1|max:100',
-            'jenis' => 'required|in:Benefit,Cost',
-            'keterangan' => 'nullable|string'
-        ]);
+        $validator = Validator::make($request->all(), Kriteria::rules($kriteria->id));
 
-        $kriteria->update($validated);
+        if ($validator->fails()) {
+            return redirect()
+                ->route('kriteria.edit', $kriteria)
+                ->withErrors($validator)
+                ->withInput();
+        }
+
+        $kriteria->update($request->all());
 
         return redirect()
             ->route('kriteria.index')

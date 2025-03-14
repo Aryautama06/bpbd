@@ -13,11 +13,21 @@ return new class extends Migration
     {
         Schema::create('nilai_alternatifs', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('alternatif_id')->constrained('alternatif')->onDelete('cascade');
-            $table->foreignId('kriteria_id')->constrained('kriteria')->onDelete('cascade');
-            $table->decimal('nilai', 8, 2);
+            $table->unsignedBigInteger('alternatif_id');
+            $table->unsignedBigInteger('kriteria_id');
+            $table->decimal('nilai', 10, 4);
             $table->timestamps();
+
+            $table->foreign('alternatif_id')
+                  ->references('id')
+                  ->on('alternatifs')
+                  ->onDelete('cascade');
             
+            $table->foreign('kriteria_id')
+                  ->references('id')
+                  ->on('kriterias')
+                  ->onDelete('cascade');
+
             $table->unique(['alternatif_id', 'kriteria_id']);
         });
     }
@@ -27,6 +37,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('nilai_alternatif');
+        Schema::dropIfExists('nilai_alternatifs');
     }
 };

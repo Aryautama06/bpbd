@@ -83,7 +83,7 @@
                                             </svg>
                                         </span>
                                     </div>
-                                    <p class="text-2xl font-bold text-white">{{ $totalBobot }}%</p>
+                                    <p class="text-2xl font-bold text-white">{{ round($totalBobot) }}%</p>
                                 </div>
 
                                 <!-- Kriteria Benefit -->
@@ -153,10 +153,8 @@
                                                 {{ $kriteria->jenis }}
                                             </span>
                                         </td>
-                                        <td class="px-6 py-4">
-                                            <span class="text-sm text-gray-900">
-                                                {{ $kriteria->bobot }}%
-                                            </span>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                            {{ $kriteria->bobot }}
                                         </td>
                                         <td class="px-6 py-4 text-right space-x-2">
                                             <a href="{{ route('kriteria.show', ['kriteria' => $kriteria->id]) }}" 

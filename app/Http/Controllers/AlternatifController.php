@@ -3,12 +3,13 @@ namespace App\Http\Controllers;
 
 use App\Models\Alternatif;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class AlternatifController extends Controller
 {
     public function index()
     {
-        $alternatifs = Alternatif::latest()->get();
+        $alternatifs = Alternatif::orderBy('kode_alternatif')->get();
         return view('alternatif.index', compact('alternatifs'));
     }
 
@@ -19,22 +20,20 @@ class AlternatifController extends Controller
 
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'kode_alternatif' => 'required|string|unique:alternatif',
-            'nama_alternatif' => 'required|string|max:255',
-            'deskripsi' => 'nullable|string'
-        ]);
+        $validator = Validator::make($request->all(), Alternatif::rules());
 
-        Alternatif::create($validated);
+        if ($validator->fails()) {
+            return redirect()
+                ->route('alternatif.create')
+                ->withErrors($validator)
+                ->withInput();
+        }
+
+        Alternatif::create($request->all());
 
         return redirect()
             ->route('alternatif.index')
-            ->with('success', 'Alternatif berhasil ditambahkan');
-    }
-
-    public function show(Alternatif $alternatif)
-    {
-        return view('alternatif.show', compact('alternatif'));
+            ->with('success', 'Data alternatif berhasil ditambahkan');
     }
 
     public function edit(Alternatif $alternatif)
@@ -44,17 +43,20 @@ class AlternatifController extends Controller
 
     public function update(Request $request, Alternatif $alternatif)
     {
-        $validated = $request->validate([
-            'kode_alternatif' => 'required|string|unique:alternatif,kode_alternatif,' . $alternatif->id,
-            'nama_alternatif' => 'required|string|max:255',
-            'deskripsi' => 'nullable|string'
-        ]);
+        $validator = Validator::make($request->all(), Alternatif::rules($alternatif->id));
 
-        $alternatif->update($validated);
+        if ($validator->fails()) {
+            return redirect()
+                ->route('alternatif.edit', $alternatif)
+                ->withErrors($validator)
+                ->withInput();
+        }
+
+        $alternatif->update($request->all());
 
         return redirect()
             ->route('alternatif.index')
-            ->with('success', 'Alternatif berhasil diperbarui');
+            ->with('success', 'Data alternatif berhasil diperbarui');
     }
 
     public function destroy(Alternatif $alternatif)
@@ -63,6 +65,11 @@ class AlternatifController extends Controller
 
         return redirect()
             ->route('alternatif.index')
-            ->with('success', 'Alternatif berhasil dihapus');
+            ->with('success', 'Data alternatif berhasil dihapus');
+    }
+
+    public function show(Alternatif $alternatif)
+    {
+        return view('alternatif.show', compact('alternatif'));
     }
 }

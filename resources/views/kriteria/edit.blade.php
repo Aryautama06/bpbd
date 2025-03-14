@@ -126,24 +126,22 @@
                                     </div>
 
                                     <!-- Jenis -->
-                                    <div>
-                                        <label for="jenis" class="block text-sm font-medium text-gray-700 mb-2">
+                                    <div class="mb-6">
+                                        <label for="jenis" class="block text-sm font-medium text-gray-700">
                                             Jenis Kriteria <span class="text-red-500">*</span>
                                         </label>
                                         <select name="jenis" 
                                                 id="jenis" 
-                                                class="form-select w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500"
-                                                required>
+                                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
                                             <option value="">Pilih Jenis Kriteria</option>
-                                            <option value="Benefit" {{ old('jenis', $kriteria->jenis) == 'Benefit' ? 'selected' : '' }}>
-                                                Benefit (Keuntungan)
-                                            </option>
-                                            <option value="Cost" {{ old('jenis', $kriteria->jenis) == 'Cost' ? 'selected' : '' }}>
-                                                Cost (Biaya)
-                                            </option>
+                                            @foreach(App\Models\Kriteria::jenisOptions() as $value => $label)
+                                                <option value="{{ $value }}" {{ old('jenis', $kriteria->jenis) == $value ? 'selected' : '' }}>
+                                                    {{ $label }}
+                                                </option>
+                                            @endforeach
                                         </select>
                                         @error('jenis')
-                                            <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
+                                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                         @enderror
                                     </div>
 
