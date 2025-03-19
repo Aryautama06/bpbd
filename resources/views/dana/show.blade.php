@@ -206,6 +206,39 @@
                                 </div>
                             </div>
                         </div>
+
+                        <!-- Add this inside your content section -->
+                        <div class="md:col-span-2">
+                            <label class="block text-sm font-medium text-gray-700">Dokumen Pendukung</label>
+                            @if($dana->bukti)
+                                <div class="mt-2 flex items-center space-x-3">
+                                    <div class="flex-1 bg-gray-50 rounded-lg p-3">
+                                        <div class="flex items-center">
+                                            <svg class="w-8 h-8 text-red-500" fill="currentColor" viewBox="0 0 24 24">
+                                                <path d="M12.667 8.667h-4v6.666h4v-6.666zm4 0v6.666h-3.333v-6.666h3.333zm-9.334 0v6.666H4v-6.666h3.333zM15.333 7H22v10h-6.667V7zm-9.333 0h6.667v10H6V7zM4 7h1.333v10H4V7zm-4 12.667v-14C0 4.75.75 4 1.667 4h20.666C23.25 4 24 4.75 24 5.667v14c0 .916-.75 1.666-1.667 1.666H1.667C.75 21.333 0 20.583 0 19.667z"/>
+                                            </svg>
+                                            <div class="ml-3">
+                                                <p class="text-sm font-medium text-gray-900">
+                                                    {{ $dana->bukti }}
+                                                </p>
+                                                <p class="text-sm text-gray-500">
+                                                    PDF Document
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <a href="{{ route('dana.download', $dana->bukti) }}" 
+                                       class="inline-flex items-center px-4 py-2 bg-bpbd-secondary text-white rounded-lg hover:bg-bpbd-secondary/90 transition-colors duration-200">
+                                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+                                        </svg>
+                                        Download
+                                    </a>
+                                </div>
+                            @else
+                                <p class="mt-2 text-sm text-gray-500">Tidak ada dokumen pendukung</p>
+                            @endif
+                        </div>
                     </div>
                 </div>
             </main>

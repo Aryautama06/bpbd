@@ -19,5 +19,20 @@
             @yield('content')
         </main>
     </div>
+
+    <!-- Add this near the end of your body tag -->
+    @if(session('success') || session('error'))
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                Swal.fire({
+                    icon: '{{ session('error') ? 'error' : 'success' }}',
+                    title: '{{ session('error') ? 'Error' : 'Sukses' }}',
+                    text: '{{ session('error') ?? session('success') }}',
+                    showConfirmButton: false,
+                    timer: 3000
+                });
+            });
+        </script>
+    @endif
 </body>
 </html>

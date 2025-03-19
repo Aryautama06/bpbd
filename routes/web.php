@@ -85,6 +85,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/dana/{dana}', [DanaController::class, 'show'])->name('dana.show');
     Route::get('/dana/{dana}/edit', [DanaController::class, 'edit'])->name('dana.edit');
     Route::put('/dana/{dana}', [DanaController::class, 'update'])->name('dana.update');
+    Route::get('/dana/download/{filename}', [DanaController::class, 'downloadBukti'])->name('dana.download');
 
     // SPK Routes
     Route::resource('kriteria', KriteriaController::class)->parameters([

@@ -6,6 +6,7 @@ use App\Models\Dana;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage; // Fix the import here
 use Carbon\Carbon;
+use Symfony\Component\HttpFoundation\Response;
 
 class DanaController extends Controller
 {
@@ -111,6 +112,28 @@ class DanaController extends Controller
             return redirect()
                 ->route('dana.index')
                 ->with('error', 'Terjadi kesalahan saat menghapus data dana');
+        }
+    }
+
+    public function downloadBukti($filename)
+    {
+        try {
+            $path = 'public/bukti_dana/' . $filename;
+            
+            if (!Storage::exists($path)) {
+                return back()->with('error', 'File tidak ditemukan.');
+            }
+
+            $mimeType = Storage::mimeType($path);
+            $headers = [
+                'Content-Type' => $mimeType,
+                'Content-Disposition' => 'attachment; filename="' . $filename . '"',
+            ];
+
+            return Storage::download($path, $filename, $headers);
+            
+        } catch (\Exception $e) {
+            return back()->with('error', 'Gagal mengunduh file.');
         }
     }
 }
